@@ -1,4 +1,4 @@
-# 韩子阳的博客
+# BugAwake
 
 这是一个使用 VuePress 2 + vuepress-theme-hope 搭建的中文个人博客，记录技术、学习与生活。
 
