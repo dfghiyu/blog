@@ -12,7 +12,7 @@ export default defineUserConfig({
   head: [["link", { rel: "icon", href: "/blog/favicon.svg" }]],
   theme: hopeTheme({
     hostname: "https://dfghjyu.github.io",
-    logo: "/avatar.svg",
+    logo: "/avatar.webp",
     repo: "dfghjyu/blog",
     docsDir: "docs",
     navbarTitle: "BugAwake",
