@@ -118,77 +118,68 @@ body,
 }
 
 .blog-layout {
-  display: grid;
-  grid-template-columns: 240px minmax(0, 760px);
-  gap: clamp(56px, 9vw, 128px);
-  width: min(1100px, calc(100% - 48px));
+  width: min(820px, calc(100% - 48px));
   margin: 0 auto;
-  padding: clamp(52px, 7vw, 88px) 0 96px;
-  align-items: start;
+  padding: clamp(48px, 7vw, 80px) 0 96px;
 }
 
-.blog-profile {
-  position: sticky;
-  top: calc(var(--navbar-height, 3.6rem) + 36px);
-}
-
-.profile-sticky {
-  padding-bottom: 24px;
+.home-profile {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  padding-bottom: 30px;
+  border-bottom: 1px solid var(--blog-line);
 }
 
 .profile-avatar {
   display: block;
-  width: 84px;
-  height: 84px;
-  margin-bottom: 20px;
+  width: 68px;
+  height: 68px;
+  flex: 0 0 auto;
   border: 1px solid var(--blog-line);
   border-radius: 50%;
   object-fit: cover;
   object-position: center 26%;
 }
 
-.profile-sticky h1 {
-  margin: 0;
-  color: var(--blog-text);
-  font-family: var(--blog-serif);
-  font-size: 1.72rem;
-  font-weight: 650;
-  letter-spacing: -0.04em;
+.profile-copy {
+  min-width: 0;
 }
 
-.profile-name {
-  margin: 5px 0 18px;
+.profile-title {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.profile-title h1 {
+  margin: 0;
+  color: var(--blog-text);
+  font-size: 1.35rem;
+  font-weight: 650;
+  letter-spacing: -0.035em;
+}
+
+.profile-title span,
+.profile-copy p {
   color: var(--blog-muted);
   font-size: 0.86rem;
 }
 
-.profile-bio {
-  max-width: 205px;
-  margin: 0;
-  color: var(--blog-muted);
-  font-size: 0.91rem;
-  line-height: 1.85;
+.profile-copy p {
+  margin: 7px 0 0;
+  line-height: 1.6;
 }
 
-.profile-links {
-  display: grid;
-  gap: 10px;
-  margin: 30px 0;
-  padding: 25px 0;
-  border-top: 1px solid var(--blog-line);
-  border-bottom: 1px solid var(--blog-line);
-}
-
-.profile-links a,
 .profile-github {
-  width: fit-content;
+  margin-left: auto;
   color: var(--blog-muted) !important;
-  font-size: 0.9rem;
+  font-size: 0.86rem;
   text-decoration: none !important;
+  white-space: nowrap;
   transition: color 160ms ease;
 }
 
-.profile-links a:hover,
 .profile-github:hover {
   color: var(--blog-accent) !important;
 }
@@ -198,42 +189,35 @@ body,
   color: var(--blog-accent);
 }
 
-.archive-header {
-  padding-bottom: 30px;
-  border-bottom: 1px solid var(--blog-line);
+.post-archive {
+  padding-top: 46px;
 }
 
-.archive-header p {
-  margin: 0 0 15px;
-  color: var(--blog-accent);
-  font-size: 0.78rem;
-  font-weight: 650;
-  letter-spacing: 0.14em;
+.archive-header {
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--blog-line);
 }
 
 .archive-header h2 {
   margin: 0;
   color: var(--blog-text);
-  font-family: var(--blog-serif);
-  font-size: clamp(2.25rem, 5vw, 3.3rem);
+  font-size: clamp(2rem, 4vw, 2.65rem);
   font-weight: 650;
-  letter-spacing: -0.065em;
-  line-height: 1.15;
+  letter-spacing: -0.06em;
+  line-height: 1.18;
 }
 
-.archive-header span {
-  display: block;
-  margin-top: 14px;
+.archive-header p {
+  margin: 12px 0 0;
   color: var(--blog-muted);
-  font-size: 0.96rem;
+  font-size: 0.94rem;
 }
 
 .category-links {
   display: flex;
   flex-wrap: wrap;
   gap: 9px 20px;
-  padding: 20px 0;
-  border-bottom: 1px solid var(--blog-line);
+  padding: 18px 0;
 }
 
 .category-links a {
@@ -247,13 +231,17 @@ body,
   color: var(--blog-accent) !important;
 }
 
+.post-list {
+  border-top: 1px solid var(--blog-line);
+}
+
 .post-list article {
   border-bottom: 1px solid var(--blog-line);
 }
 
 .post-item {
   display: block;
-  padding: 33px 0 35px;
+  padding: 28px 0 30px;
   color: inherit !important;
   text-decoration: none !important;
 }
@@ -265,7 +253,8 @@ body,
 
 .post-meta {
   display: flex;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
   align-items: center;
   color: var(--blog-muted);
   font-size: 0.77rem;
@@ -276,13 +265,12 @@ body,
 }
 
 .post-item h3 {
-  margin: 15px 0 10px;
+  margin: 12px 0 8px;
   color: var(--blog-text);
-  font-family: var(--blog-serif);
-  font-size: clamp(1.38rem, 2.6vw, 1.72rem);
+  font-size: clamp(1.26rem, 2.6vw, 1.52rem);
   font-weight: 650;
-  letter-spacing: -0.045em;
-  line-height: 1.38;
+  letter-spacing: -0.04em;
+  line-height: 1.42;
   transition: color 160ms ease;
 }
 
@@ -291,37 +279,18 @@ body,
 }
 
 .post-item p {
-  max-width: 650px;
+  max-width: 680px;
   margin: 0;
   color: var(--blog-muted);
   font-size: 0.94rem;
-  line-height: 1.85;
+  line-height: 1.8;
 }
 
 .post-reading {
   display: block;
-  margin-top: 17px;
+  margin-top: 14px;
   color: var(--blog-muted);
-  font-size: 0.78rem;
-}
-
-.post-reading b {
-  display: inline-block;
-  margin-left: 4px;
-  color: var(--blog-accent);
-  font-size: 0.95rem;
-  font-weight: 400;
-  transition: transform 160ms ease;
-}
-
-.post-item:hover .post-reading b {
-  transform: translateX(4px);
-}
-
-.archive-empty {
-  margin: 27px 0 0;
-  color: var(--blog-muted);
-  font-size: 0.84rem;
+  font-size: 0.77rem;
 }
 
 .theme-default-content {
@@ -351,74 +320,41 @@ body,
   color: var(--blog-muted) !important;
 }
 
-@media (max-width: 900px) {
-  .blog-layout {
-    grid-template-columns: minmax(0, 760px);
-    gap: 48px;
-    width: min(760px, calc(100% - 40px));
-  }
-
-  .blog-profile {
-    position: static;
-  }
-
-  .profile-sticky {
-    display: grid;
-    grid-template-columns: 72px minmax(0, 1fr);
-    column-gap: 18px;
-    align-items: center;
-  }
-
-  .profile-avatar {
-    grid-row: span 2;
-    width: 72px;
-    height: 72px;
-    margin: 0;
-  }
-
-  .profile-sticky h1 {
-    font-size: 1.45rem;
-  }
-
-  .profile-name {
-    margin: 2px 0 0;
-  }
-
-  .profile-bio,
-  .profile-links,
-  .profile-github {
-    grid-column: 1 / -1;
-  }
-
-  .profile-bio {
-    max-width: none;
-    margin-top: 20px;
-  }
-
-  .profile-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px 22px;
-    margin: 21px 0;
-    padding: 18px 0;
-  }
-}
-
 @media (max-width: 640px) {
   .blog-layout {
-    width: min(100% - 32px, 760px);
+    width: calc(100% - 32px);
     padding-top: 38px;
   }
 
-  .archive-header h2 {
-    font-size: 2.25rem;
+  .home-profile {
+    gap: 14px;
+    padding-bottom: 25px;
+  }
+
+  .profile-avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .profile-title {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .profile-title h1 {
+    font-size: 1.2rem;
+  }
+
+  .profile-github {
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+
+  .post-archive {
+    padding-top: 36px;
   }
 
   .post-item {
-    padding: 27px 0 29px;
-  }
-
-  .category-links {
-    gap: 9px 16px;
+    padding: 24px 0 26px;
   }
 }

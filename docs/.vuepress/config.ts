@@ -33,7 +33,7 @@ export default defineUserConfig({
       "/posts/": [
         {
           text: "文章目录",
-          children: ["", "hello-vuepress"],
+          children: ["", "hello-vuepress", "welcome-technology", "welcome-learning", "welcome-life"],
         },
       ],
       "/about/": [{ text: "关于", children: [""] }],
