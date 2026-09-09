@@ -11,9 +11,9 @@ export default defineUserConfig({
   description: "记录技术、学习与生活",
   head: [["link", { rel: "icon", href: "/blog/favicon.svg" }]],
   theme: hopeTheme({
-    hostname: "https://dfghjyu.github.io",
+    hostname: "https://dfghiyu.github.io",
     logo: "/avatar.webp",
-    repo: "dfghjyu/blog",
+    repo: "dfghiyu/blog",
     docsDir: "docs",
     navbarTitle: "BugAwake",
     navbar: [
@@ -40,7 +40,8 @@ export default defineUserConfig({
       "/category/": [{ text: "分类", children: [""] }],
       "/tag/": [{ text: "标签", children: [""] }],
     },
-    darkmode: "switch",
+    // 新访客以浅色阅读为默认，仍可通过导航栏按钮切换到深色。
+    darkmode: "toggle",
     toc: true,
     breadcrumb: true,
     pageInfo: ["Author", "Original", "Date", "Category", "Tag", "ReadingTime"],

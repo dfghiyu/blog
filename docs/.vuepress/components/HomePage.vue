@@ -1,15 +1,5 @@
 <script setup lang="ts">
-type Post = {
-  title: string;
-  description: string;
-  date: string;
-  reading: string;
-  category: string;
-  link?: string;
-  draft?: boolean;
-};
-
-const posts: Post[] = [
+const posts = [
   {
     title: "从零搭建 VuePress 博客",
     description: "把一个想法变成可以持续更新的小站，记录这次搭建过程中的选择、踩坑和一点点心得。",
@@ -18,99 +8,62 @@ const posts: Post[] = [
     category: "随笔",
     link: "/blog/posts/hello-vuepress/",
   },
-  {
-    title: "下一篇记录正在整理",
-    description: "技术实践、学习方法和生活里值得回看的片段，会慢慢放在这里。",
-    date: "准备中",
-    reading: "",
-    category: "学习",
-    draft: true,
-  },
-  {
-    title: "把问题写成自己的地图",
-    description: "从一次次查资料、做实验开始，留下以后还能看懂的线索。",
-    date: "准备中",
-    reading: "",
-    category: "技术",
-    draft: true,
-  },
 ];
 
-const categories = ["全部文章", "技术", "学习", "生活", "随笔"];
+const categories = ["技术", "学习", "生活", "随笔"];
 </script>
 
 <template>
-  <main class="quiet-home">
-    <div class="quiet-layout">
-      <section class="article-column" aria-labelledby="article-column-title">
-        <div class="article-column-inner">
-          <header class="column-intro">
-            <p class="quiet-label">文章</p>
-            <h1 id="article-column-title">最近的记录</h1>
-            <p>关于技术、学习和生活的随笔。</p>
-          </header>
+  <main class="blog-home">
+    <div class="blog-layout">
+      <aside class="blog-profile" aria-label="个人资料">
+        <div class="profile-sticky">
+          <img class="profile-avatar" :src="'/blog/avatar.webp'" alt="BugAwake 的头像" />
+          <h1>BugAwake</h1>
+          <p class="profile-name">韩子阳</p>
+          <p class="profile-bio">记录技术、学习与生活。</p>
 
-          <details class="article-filter">
-            <summary>筛选文章 <span aria-hidden="true">⌄</span></summary>
-            <div class="article-filter-menu">
-              <a v-for="category in categories" :key="category" href="/blog/posts/">{{ category }}</a>
-            </div>
-          </details>
-
-          <div class="article-list">
-            <template v-for="post in posts" :key="post.title">
-              <a v-if="post.link" class="article-row" :href="post.link">
-                <span class="article-category">{{ post.category }}</span>
-                <div class="article-copy">
-                  <h2>{{ post.title }}</h2>
-                  <p>{{ post.description }}</p>
-                  <time>{{ post.date }}<span aria-hidden="true"> · </span>{{ post.reading }}</time>
-                </div>
-                <span class="article-arrow" aria-hidden="true">→</span>
-              </a>
-
-              <div v-else class="article-row article-row-draft" aria-label="文章筹备中">
-                <span class="article-category">{{ post.category }}</span>
-                <div class="article-copy">
-                  <h2>{{ post.title }}</h2>
-                  <p>{{ post.description }}</p>
-                  <time>{{ post.date }}</time>
-                </div>
-                <span class="article-status">筹备中</span>
-              </div>
-            </template>
-          </div>
-
-          <p class="article-end">先写到这里，之后慢慢更新。</p>
-        </div>
-      </section>
-
-      <aside class="profile-rail" aria-label="个人资料">
-        <div class="profile-rail-inner">
-          <div class="profile-heading">
-            <img :src="'/blog/avatar.webp'" alt="银灰发动漫头像" />
-            <div>
-              <h2>BugAwake</h2>
-              <p>韩子阳</p>
-            </div>
-          </div>
-
-          <p class="profile-intro">
-            记录技术、学习与生活。把遇到的问题写下来，也留下以后愿意重新读一遍的东西。
-          </p>
-
-          <nav class="profile-nav" aria-label="站点导航">
-            <a href="/blog/posts/">文章</a>
-            <a href="/blog/about/">关于</a>
+          <nav class="profile-links" aria-label="站内导航">
+            <a href="/blog/posts/">全部文章</a>
+            <a href="/blog/category/">分类</a>
             <a href="/blog/tag/">标签</a>
+            <a href="/blog/about/">关于</a>
           </nav>
 
-          <div class="profile-bottom">
-            <a href="https://github.com/dfghiyu/blog" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
-            <p>保持好奇，慢慢积累。</p>
-          </div>
+          <a class="profile-github" href="https://github.com/dfghiyu/blog" target="_blank" rel="noreferrer">
+            GitHub <span aria-hidden="true">↗</span>
+          </a>
         </div>
       </aside>
+
+      <section class="post-archive" aria-labelledby="archive-title">
+        <header class="archive-header">
+          <p>文章</p>
+          <h2 id="archive-title">最近更新</h2>
+          <span>把值得留下的东西写下来。</span>
+        </header>
+
+        <nav class="category-links" aria-label="文章分类">
+          <a class="active" href="/blog/posts/">全部</a>
+          <a v-for="category in categories" :key="category" href="/blog/category/">{{ category }}</a>
+        </nav>
+
+        <div class="post-list">
+          <article v-for="post in posts" :key="post.title">
+            <a class="post-item" :href="post.link">
+              <div class="post-meta">
+                <span>{{ post.category }}</span>
+                <time>{{ post.date }}</time>
+              </div>
+              <h3>{{ post.title }}</h3>
+              <p>{{ post.description }}</p>
+              <span class="post-reading">{{ post.reading }} <b aria-hidden="true">→</b></span>
+            </a>
+          </article>
+        </div>
+
+        <p class="archive-empty">更多文章会在这里慢慢积累。</p>
+      </section>
     </div>
   </main>
 </template>
