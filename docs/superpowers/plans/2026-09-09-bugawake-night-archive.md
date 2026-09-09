@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- Preserve `base: "/blog/"` and `https://dfghjyu.github.io/blog/`.
+- Preserve `base: "/blog/"` and `https://dfghiyu.github.io/blog/`.
 - Keep repository `dfghiyu/blog` and displayed site name `BugAwake`.
 - Keep search, GitHub link, responsive layout, code highlighting, table of contents, and dark-mode switching.
 - Use the supplied image only as an edited/cropped project asset; add no text, watermark, extra characters, or copied reference-project assets.
@@ -118,7 +118,7 @@ Target `.vp-navbar`, `.vp-sidebar`, `.vp-page`, `.theme-default-content`, footer
 
 - [x] **Step 3: Configure title, logo, and navigation**
 
-Keep `title: "BugAwake"`, `navbarTitle: "BugAwake"`, `hostname: "https://dfghjyu.github.io"`, `logo: "/avatar.webp"`, `darkmode: "switch"`, and `/blog/`. Use navigation entries for 首页, 博文 with children for 全部文章/技术/学习/生活, and 关于.
+Keep `title: "BugAwake"`, `navbarTitle: "BugAwake"`, `hostname: "https://dfghiyu.github.io"`, `logo: "/avatar.webp"`, `darkmode: "switch"`, and `/blog/`. Use navigation entries for 首页, 博文 with children for 全部文章/技术/学习/生活, and 关于.
 
 - [x] **Step 4: Update text documentation**
 

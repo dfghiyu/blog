@@ -2,7 +2,7 @@
 
 这是一个使用 VuePress 2 + vuepress-theme-hope 搭建的中文个人博客，记录技术、学习与生活。
 
-线上地址：<https://dfghjyu.github.io/blog/>
+线上地址：<https://dfghiyu.github.io/blog/>
 
 ## 环境
 
@@ -24,6 +24,24 @@ pnpm docs:build
 
 构建产物位于 `docs/.vuepress/dist/`。
 
+## 新增文章
+
+在 `docs/posts/` 新建 Markdown 文件，并填写至少这些 frontmatter：
+
+```md
+---
+title: 文章标题
+description: 一句话摘要
+date: 2026-09-10
+category: 技术
+tag:
+  - 编程
+author: 韩子阳
+---
+```
+
+保存后运行 `pnpm docs:dev`，首页、文章目录、分类页和标签页会在启动前自动更新。
+
 ## 首次推送到 GitHub
 
 在当前项目目录执行：
@@ -31,7 +49,7 @@ pnpm docs:build
 ```bash
 git init
 git branch -M main
-git remote add origin https://github.com/dfghjyu/blog.git
+git remote add origin https://github.com/dfghiyu/blog.git
 git add .
 git commit -m "feat: build personal blog"
 git push -u origin main

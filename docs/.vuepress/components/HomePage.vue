@@ -1,49 +1,15 @@
 <script setup lang="ts">
-type Post = {
-  title: string;
-  description: string;
-  date: string;
-  reading: string;
-  category: string;
-  link: string;
-};
+import { computed, ref } from "vue";
+import { withBase } from "vuepress/client";
+import { categories, posts } from "../generated/posts";
 
-const posts: Post[] = [
-  {
-    title: "从零搭建 VuePress 博客",
-    description: "把一个想法变成可以持续更新的小站，记录这次搭建过程中的选择、踩坑和一点点心得。",
-    date: "2026 年 9 月 9 日",
-    reading: "约 2 分钟",
-    category: "随笔",
-    link: "/blog/posts/hello-vuepress/",
-  },
-  {
-    title: "欢迎来到技术笔记",
-    description: "从可复现的小问题开始，建立自己的技术记录。",
-    date: "2026 年 9 月 9 日",
-    reading: "约 1 分钟",
-    category: "技术",
-    link: "/blog/posts/welcome-technology/",
-  },
-  {
-    title: "欢迎来到学习记录",
-    description: "把学习过程拆成可以回看的小段落。",
-    date: "2026 年 9 月 9 日",
-    reading: "约 1 分钟",
-    category: "学习",
-    link: "/blog/posts/welcome-learning/",
-  },
-  {
-    title: "欢迎来到生活随笔",
-    description: "留下日常里值得回头看的片段。",
-    date: "2026 年 9 月 9 日",
-    reading: "约 1 分钟",
-    category: "生活",
-    link: "/blog/posts/welcome-life/",
-  },
-];
-
-const categories = ["技术", "学习", "生活", "随笔"];
+const selectedCategory = ref("全部");
+const categoryOptions = ["全部", ...categories];
+const visiblePosts = computed(() =>
+  selectedCategory.value === "全部"
+    ? posts
+    : posts.filter((post) => post.category === selectedCategory.value),
+);
 </script>
 
 <template>
@@ -58,7 +24,7 @@ const categories = ["技术", "学习", "生活", "随笔"];
           </div>
           <p>记录技术、学习与生活。</p>
         </div>
-        <a class="profile-github" href="https://github.com/dfghiyu/blog" target="_blank" rel="noreferrer">
+        <a class="profile-github" href="https://github.com/dfghiyu/blog" target="_blank" rel="noopener noreferrer">
           GitHub <span aria-hidden="true">↗</span>
         </a>
       </header>
@@ -69,17 +35,25 @@ const categories = ["技术", "学习", "生活", "随笔"];
           <p>留下一些正在发生的事。</p>
         </header>
 
-        <nav class="category-links" aria-label="文章分类">
-          <a class="active" href="/blog/posts/">全部</a>
-          <a v-for="category in categories" :key="category" href="/blog/category/">{{ category }}</a>
+        <nav class="category-links" aria-label="文章分类筛选">
+          <button
+            v-for="category in categoryOptions"
+            :key="category"
+            type="button"
+            :class="{ active: selectedCategory === category }"
+            :aria-pressed="selectedCategory === category"
+            @click="selectedCategory = category"
+          >
+            {{ category }}
+          </button>
         </nav>
 
-        <div class="post-list">
-          <article v-for="post in posts" :key="post.link">
-            <a class="post-item" :href="post.link">
+        <div v-if="visiblePosts.length" class="post-list" aria-live="polite">
+          <article v-for="post in visiblePosts" :key="post.path">
+            <a class="post-item" :href="withBase(post.path)">
               <div class="post-meta">
                 <span>{{ post.category }}</span>
-                <time>{{ post.date }}</time>
+                <time :datetime="post.date">{{ post.dateLabel }}</time>
               </div>
               <h3>{{ post.title }}</h3>
               <p>{{ post.description }}</p>
@@ -87,6 +61,7 @@ const categories = ["技术", "学习", "生活", "随笔"];
             </a>
           </article>
         </div>
+        <p v-else class="filter-empty">这个分类下暂时还没有文章。</p>
       </section>
     </div>
   </main>

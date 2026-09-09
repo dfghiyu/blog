@@ -2,7 +2,7 @@
 
 ## 目标
 
-从空目录搭建一个中文个人博客，使用 VuePress 2 和 vuepress-theme-hope，部署目标为 GitHub Pages 仓库 `dfghjyu/blog`，生产路径为 `/blog/`。
+从空目录搭建一个中文个人博客，使用 VuePress 2 和 vuepress-theme-hope，部署目标为 GitHub Pages 仓库 `dfghiyu/blog`，生产路径为 `/blog/`。
 
 ## 视觉与内容
 

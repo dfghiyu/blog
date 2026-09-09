@@ -9,8 +9,9 @@
     "pnpm": ">=10"
   },
   "scripts": {
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs",
+    "docs:generate": "node scripts/generate-content.mjs",
+    "docs:dev": "pnpm docs:generate && vuepress dev docs",
+    "docs:build": "pnpm docs:generate && vuepress build docs",
     "docs:clean": "vuepress clean-temp docs"
   },
   "devDependencies": {

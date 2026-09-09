@@ -5,7 +5,9 @@ description: 按内容方向浏览文章。
 
 # 分类
 
-- [技术](/blog/posts/welcome-technology.html)
-- [学习](/blog/posts/welcome-learning.html)
-- [生活](/blog/posts/welcome-life.html)
-- [随笔](/blog/posts/hello-vuepress.html)
+按内容方向浏览文章。首页的分类按钮会直接在当前页面筛选，下面的分类链接则适合收藏和分享。
+
+- [技术](./technology/)
+- [学习](./learning/)
+- [生活](./life/)
+- [随笔](./essay/)

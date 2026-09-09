@@ -11,4 +11,4 @@ description: 关于 BugAwake 和这个小站。
 
 ## 这个站点
 
-本站使用 VuePress 2 构建，源代码托管在 [GitHub](https://github.com/dfghjyu/blog)。如果你发现文章中的错误，欢迎提交 issue 或直接告诉我。
+本站使用 VuePress 2 构建，源代码托管在 [GitHub](https://github.com/dfghiyu/blog)。如果你发现文章中的错误，欢迎提交 issue 或直接告诉我。

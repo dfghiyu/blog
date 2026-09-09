@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build and verify a deployable Chinese VuePress 2 blog for `dfghjyu/blog` with a mint anime-tech visual identity.
+**Goal:** Build and verify a deployable Chinese VuePress 2 blog for `dfghiyu/blog` with a mint anime-tech visual identity.
 
 **Architecture:** Keep VuePress content in `docs/`, theme and site behavior in `docs/.vuepress/`, and deployment in `.github/workflows/deploy.yml`. Use `vuepress-theme-hope` for search, dark mode, taxonomy pages, and article chrome; use a small custom homepage and SCSS layer for the distinctive visual system.
 
@@ -14,7 +14,7 @@
 - Site title must be `韩子阳的博客`; description must be `记录技术、学习与生活`.
 - Visual direction is white/light-cyan, deep teal, mint, card-based, and dark-mode capable.
 - Anime visual must be an original silver-gray-haired quiet guitarist placeholder, not a copy of a protected character.
-- Deployment target is GitHub repository `dfghjyu/blog` and the `main` branch.
+- Deployment target is GitHub repository `dfghiyu/blog` and the `main` branch.
 - Do not add secrets, tokens, or private data.
 
 ---
