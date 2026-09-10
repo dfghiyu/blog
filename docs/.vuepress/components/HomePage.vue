@@ -31,8 +31,8 @@ const visiblePosts = computed(() =>
 
       <section class="post-archive" aria-labelledby="archive-title">
         <header class="archive-header">
-          <h2 id="archive-title">最新文章</h2>
-          <p>留下一些正在发生的事。</p>
+          <h2 id="archive-title">文章列表</h2>
+          <p>按时间从早到晚，记录一路走过的事。</p>
         </header>
 
         <nav class="category-links" aria-label="文章分类筛选">

@@ -56,17 +56,32 @@ const getReadingLabel = (body) => {
 
 const escapeForTypeScript = (value) => JSON.stringify(value);
 
+const collectMarkdownFiles = async (directory, relativeDirectory = "") => {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    const relativePath = join(relativeDirectory, entry.name);
+    const absolutePath = join(directory, entry.name);
+
+    if (entry.isDirectory()) {
+      files.push(...(await collectMarkdownFiles(absolutePath, relativePath)));
+    } else if (entry.name.endsWith(".md") && entry.name !== "README.md") {
+      files.push(relativePath);
+    }
+  }
+
+  return files;
+};
+
 const preferredCategories = ["技术", "学习", "生活", "随笔"];
-const files = (await readdir(postsDirectory, { withFileTypes: true }))
-  .filter((entry) => entry.isFile() && entry.name.endsWith(".md") && entry.name !== "README.md")
-  .map((entry) => entry.name)
-  .sort();
+const files = (await collectMarkdownFiles(postsDirectory)).sort();
 
 const posts = [];
-for (const fileName of files) {
-  const source = await readFile(join(postsDirectory, fileName), "utf8");
+for (const relativeFileName of files) {
+  const source = await readFile(join(postsDirectory, relativeFileName), "utf8");
   const { values, body } = parseFrontmatter(source);
-  const slug = fileName.replace(/\.md$/, "");
+  const slug = relativeFileName.replace(/\.md$/, "").split(sep).join("/");
   const rawTags = values.tag ?? values.tags ?? [];
   const tags = Array.isArray(rawTags) ? rawTags : rawTags ? [rawTags] : [];
   posts.push({
@@ -82,7 +97,7 @@ for (const fileName of files) {
   });
 }
 
-posts.sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
+posts.sort((a, b) => a.date.localeCompare(b.date) || a.slug.localeCompare(b.slug));
 
 const categories = [...new Set(posts.map((post) => post.category))].sort((a, b) => {
   const aIndex = preferredCategories.indexOf(a);
