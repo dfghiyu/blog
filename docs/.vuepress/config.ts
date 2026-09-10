@@ -62,6 +62,14 @@ const folderSidebarItem = (folder: FolderNode) => ({
   ],
 });
 
+const folderSidebars: Record<string, ReturnType<typeof folderSidebarItem>[]> = {};
+const addFolderSidebar = (folder: FolderNode): void => {
+  folderSidebars[folder.path] = [folderSidebarItem(folder)];
+  for (const child of folder.children.values()) addFolderSidebar(child);
+};
+
+for (const folder of postTree.children.values()) addFolderSidebar(folder);
+
 const postsSidebar = [
   {
     text: "全部文章",
@@ -104,6 +112,7 @@ export default defineUserConfig({
     ],
     sidebar: {
       "/posts/": postsSidebar,
+      ...folderSidebars,
       "/about/": [{ text: "关于", children: [""] }],
       "/tag/": [{ text: "标签", children: [""] }],
     },
