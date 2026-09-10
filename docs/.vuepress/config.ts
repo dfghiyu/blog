@@ -53,18 +53,20 @@ const sortFolders = (folders: FolderNode[]) =>
     return a.name.localeCompare(b.name);
   });
 
-const folderSidebarItem = (folder: FolderNode) => ({
+const folderSidebarItem = (folder: FolderNode, expanded = false) => ({
   text: folder.name,
   link: folder.path,
+  collapsible: true,
+  expanded,
   children: [
-    ...sortFolders([...folder.children.values()]).map(folderSidebarItem),
+    ...sortFolders([...folder.children.values()]).map((child) => folderSidebarItem(child)),
     ...folder.posts.map((post) => ({ text: post.title, link: post.path })),
   ],
 });
 
 const folderSidebars: Record<string, ReturnType<typeof folderSidebarItem>[]> = {};
 const addFolderSidebar = (folder: FolderNode): void => {
-  folderSidebars[folder.path] = [folderSidebarItem(folder)];
+  folderSidebars[folder.path] = [folderSidebarItem(folder, true)];
   for (const child of folder.children.values()) addFolderSidebar(child);
 };
 
@@ -74,8 +76,10 @@ const postsSidebar = [
   {
     text: "全部文章",
     link: "/posts/",
+    collapsible: true,
+    expanded: true,
     children: [
-      ...sortFolders([...postTree.children.values()]).map(folderSidebarItem),
+      ...sortFolders([...postTree.children.values()]).map((folder) => folderSidebarItem(folder)),
       ...postTree.posts.map((post) => ({ text: post.title, link: post.path })),
     ],
   },
