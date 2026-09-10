@@ -1,37 +1,77 @@
 import { defineUserConfig } from "vuepress";
 import { viteBundler } from "@vuepress/bundler-vite";
 import { hopeTheme } from "vuepress-theme-hope";
-import { categories, posts } from "./generated/posts";
+import { posts, type BlogPost } from "./generated/posts";
 
-const postSidebarChildren = [
-  { text: "文章", link: "/posts/" },
-  ...posts.map((post) => ({ text: post.title, link: post.path })),
-];
-const categorySlugs: Record<string, string> = {
-  技术: "technology",
-  学习: "learning",
-  生活: "life",
-  随笔: "essay",
+type FolderNode = {
+  name: string;
+  path: string;
+  posts: BlogPost[];
+  children: Map<string, FolderNode>;
 };
 
-const categoryPath = (category: string) => `/category/${categorySlugs[category] ?? category}/`;
-const postsInCategory = (category: string) => posts.filter((post) => post.category === category);
-const categorySidebar = (category: string) => [
+const postTree: FolderNode = {
+  name: "posts",
+  path: "/posts/",
+  posts: [],
+  children: new Map(),
+};
+
+for (const post of posts) {
+  const segments = post.slug.split("/");
+  segments.pop();
+
+  let current = postTree;
+  const pathSegments: string[] = [];
+  for (const segment of segments) {
+    pathSegments.push(segment);
+    let child = current.children.get(segment);
+    if (!child) {
+      child = {
+        name: segment,
+        path: `/posts/${pathSegments.join("/")}/`,
+        posts: [],
+        children: new Map(),
+      };
+      current.children.set(segment, child);
+    }
+    current = child;
+  }
+  current.posts.push(post);
+}
+
+const preferredFolders = ["technology", "learning", "life", "essay"];
+const sortFolders = (folders: FolderNode[]) =>
+  folders.sort((a, b) => {
+    const aIndex = preferredFolders.indexOf(a.name);
+    const bIndex = preferredFolders.indexOf(b.name);
+    if (aIndex !== -1 || bIndex !== -1) {
+      if (aIndex === -1) return 1;
+      if (bIndex === -1) return -1;
+      if (aIndex !== bIndex) return aIndex - bIndex;
+    }
+    return a.name.localeCompare(b.name);
+  });
+
+const folderSidebarItem = (folder: FolderNode) => ({
+  text: folder.name,
+  link: folder.path,
+  children: [
+    ...sortFolders([...folder.children.values()]).map(folderSidebarItem),
+    ...folder.posts.map((post) => ({ text: post.title, link: post.path })),
+  ],
+});
+
+const postsSidebar = [
   {
-    text: `${category}文章`,
+    text: "全部文章",
+    link: "/posts/",
     children: [
-      { text: `${category}分类`, link: categoryPath(category) },
-      ...postsInCategory(category).map((post) => ({ text: post.title, link: post.path })),
+      ...sortFolders([...postTree.children.values()]).map(folderSidebarItem),
+      ...postTree.posts.map((post) => ({ text: post.title, link: post.path })),
     ],
   },
 ];
-
-const articleSidebars = Object.fromEntries(
-  posts.map((post) => [post.path, categorySidebar(post.category)]),
-);
-const categorySidebars = Object.fromEntries(
-  categories.map((category) => [categoryPath(category), categorySidebar(category)]),
-);
 
 export default defineUserConfig({
   bundler: viteBundler(),
@@ -53,25 +93,18 @@ export default defineUserConfig({
         text: "博文",
         children: [
           { text: "全部文章", link: "/posts/" },
-          { text: "技术", link: "/category/technology/" },
-          { text: "学习", link: "/category/learning/" },
-          { text: "生活", link: "/category/life/" },
-          { text: "随笔", link: "/category/essay/" },
+          { text: "技术", link: "/posts/technology/" },
+          { text: "学习", link: "/posts/learning/" },
+          { text: "生活", link: "/posts/life/" },
+          { text: "随笔", link: "/posts/essay/" },
           { text: "标签", link: "/tag/" },
         ],
       },
       { text: "关于", link: "/about/" },
     ],
     sidebar: {
-      ...articleSidebars,
-      "/posts/": [
-        {
-          text: "文章目录",
-          children: postSidebarChildren,
-        },
-      ],
+      "/posts/": postsSidebar,
       "/about/": [{ text: "关于", children: [""] }],
-      ...categorySidebars,
       "/category/": [{ text: "分类", children: [""] }],
       "/tag/": [{ text: "标签", children: [""] }],
     },

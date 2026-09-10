@@ -6,13 +6,15 @@ import { posts } from "../generated/posts";
 const props = defineProps<{
   category?: string;
   tag?: string;
+  pathPrefix?: string;
 }>();
 
 const visiblePosts = computed(() =>
   posts.filter((post) => {
     const matchesCategory = !props.category || post.category === props.category;
     const matchesTag = !props.tag || post.tags.includes(props.tag);
-    return matchesCategory && matchesTag;
+    const matchesPath = !props.pathPrefix || post.path.startsWith(props.pathPrefix);
+    return matchesCategory && matchesTag && matchesPath;
   }),
 );
 </script>
@@ -23,6 +25,7 @@ const visiblePosts = computed(() =>
       <span>{{ visiblePosts.length }} 篇文章</span>
       <span v-if="props.category">分类：{{ props.category }}</span>
       <span v-if="props.tag">标签：{{ props.tag }}</span>
+      <span v-if="props.pathPrefix">目录：{{ props.pathPrefix }}</span>
     </div>
 
     <div v-if="visiblePosts.length" class="catalog-list">
