@@ -16,7 +16,14 @@ const visiblePosts = computed(() =>
   <main class="blog-home">
     <div class="blog-layout">
       <header class="home-profile" aria-label="个人资料">
-        <img class="profile-avatar" :src="'/blog/avatar.webp'" alt="BugAwake 的头像" />
+        <img
+          class="profile-avatar"
+          :src="withBase('/avatar.webp')"
+          alt="BugAwake 的头像"
+          width="68"
+          height="68"
+          decoding="async"
+        />
         <div class="profile-copy">
           <div class="profile-title">
             <h1>BugAwake</h1>

@@ -105,7 +105,6 @@ export default defineUserConfig({
     sidebar: {
       "/posts/": postsSidebar,
       "/about/": [{ text: "关于", children: [""] }],
-      "/category/": [{ text: "分类", children: [""] }],
       "/tag/": [{ text: "标签", children: [""] }],
     },
     // 新访客以浅色阅读为默认，仍可通过导航栏按钮切换到深色。
