@@ -1,9 +1,34 @@
 import { defineUserConfig } from "vuepress";
 import { viteBundler } from "@vuepress/bundler-vite";
 import { hopeTheme } from "vuepress-theme-hope";
-import { posts } from "./generated/posts";
+import { categories, posts } from "./generated/posts";
 
 const postSidebarChildren = ["", ...posts.map((post) => post.slug)];
+const categorySlugs: Record<string, string> = {
+  技术: "technology",
+  学习: "learning",
+  生活: "life",
+  随笔: "essay",
+};
+
+const categoryPath = (category: string) => `/category/${categorySlugs[category] ?? category}/`;
+const postsInCategory = (category: string) => posts.filter((post) => post.category === category);
+const categorySidebar = (category: string) => [
+  {
+    text: `${category}文章`,
+    children: [
+      { text: `${category}分类`, link: categoryPath(category) },
+      ...postsInCategory(category).map((post) => ({ text: post.title, link: post.path })),
+    ],
+  },
+];
+
+const articleSidebars = Object.fromEntries(
+  posts.map((post) => [post.path, categorySidebar(post.category)]),
+);
+const categorySidebars = Object.fromEntries(
+  categories.map((category) => [categoryPath(category), categorySidebar(category)]),
+);
 
 export default defineUserConfig({
   bundler: viteBundler(),
@@ -35,6 +60,7 @@ export default defineUserConfig({
       { text: "关于", link: "/about/" },
     ],
     sidebar: {
+      ...articleSidebars,
       "/posts/": [
         {
           text: "文章目录",
@@ -42,11 +68,8 @@ export default defineUserConfig({
         },
       ],
       "/about/": [{ text: "关于", children: [""] }],
+      ...categorySidebars,
       "/category/": [{ text: "分类", children: [""] }],
-      "/category/technology/": [{ text: "技术", children: [""] }],
-      "/category/learning/": [{ text: "学习", children: [""] }],
-      "/category/life/": [{ text: "生活", children: [""] }],
-      "/category/essay/": [{ text: "随笔", children: [""] }],
       "/tag/": [{ text: "标签", children: [""] }],
     },
     // 新访客以浅色阅读为默认，仍可通过导航栏按钮切换到深色。
