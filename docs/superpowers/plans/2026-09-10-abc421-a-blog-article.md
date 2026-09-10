@@ -4,13 +4,13 @@
 
 **Goal:** Add a Chinese ACM learning article for AtCoder ABC421 A with verified C++ and Python solutions.
 
-**Architecture:** Add one top-level Markdown file under `docs/posts/` so the existing content generator automatically includes it in the article list, learning category, and tag index. Keep the existing VuePress layout and dependency set unchanged.
+**Architecture:** Add the Markdown file under `docs/posts/learning/acm/` so the recursive content generator automatically includes it in the article list, learning category, and tag index. Keep the existing VuePress layout and dependency set unchanged.
 
 **Tech Stack:** VuePress 2, Markdown frontmatter, C++17-style code, Python 3.
 
 ## Global Constraints
 
-- Keep the article under `/Users/jingzhe/Desktop/blog/docs/posts/`.
+- Keep the article under `/Users/jingzhe/Desktop/blog/docs/posts/learning/acm/`.
 - Use `category: 学习`.
 - Include the official AtCoder problem link.
 - Include both C++ and Python implementations.
@@ -21,7 +21,7 @@
 ### Task 1: Add the problem article
 
 **Files:**
-- Create: `/Users/jingzhe/Desktop/blog/docs/posts/abc421-a-misdelivery.md`
+- Create: `/Users/jingzhe/Desktop/blog/docs/posts/learning/acm/abc421-a-misdelivery.md`
 
 **Interfaces:**
 - Consumes: AtCoder ABC421 A input/output definition.

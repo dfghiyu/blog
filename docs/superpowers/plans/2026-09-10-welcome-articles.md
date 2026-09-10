@@ -20,10 +20,10 @@
 ### Task 1: Rewrite the four welcome articles
 
 **Files:**
-- Modify: `/Users/jingzhe/Desktop/blog/docs/posts/welcome-technology.md`
-- Modify: `/Users/jingzhe/Desktop/blog/docs/posts/welcome-learning.md`
-- Modify: `/Users/jingzhe/Desktop/blog/docs/posts/welcome-life.md`
-- Modify: `/Users/jingzhe/Desktop/blog/docs/posts/hello-vuepress.md`
+- Modify: `/Users/jingzhe/Desktop/blog/docs/posts/technology/welcome-technology.md`
+- Modify: `/Users/jingzhe/Desktop/blog/docs/posts/learning/welcome-learning.md`
+- Modify: `/Users/jingzhe/Desktop/blog/docs/posts/life/welcome-life.md`
+- Modify: `/Users/jingzhe/Desktop/blog/docs/posts/essay/hello-vuepress.md`
 
 **Interfaces:**
 - Consumes: Existing frontmatter and article routes.

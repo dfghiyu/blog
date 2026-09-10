@@ -26,7 +26,18 @@ pnpm docs:build
 
 ## 新增文章
 
-在 `docs/posts/` 新建 Markdown 文件，并填写至少这些 frontmatter：
+按文章分类把 Markdown 文件放在对应目录中：
+
+```text
+docs/posts/
+├── technology/
+├── learning/
+│   └── acm/
+├── life/
+└── essay/
+```
+
+例如，ACM 题解放在 `docs/posts/learning/acm/`，其他学习笔记直接放在 `docs/posts/learning/`。每篇文章填写至少这些 frontmatter：
 
 ```md
 ---
@@ -40,7 +51,7 @@ author: 韩子阳
 ---
 ```
 
-保存后运行 `pnpm docs:dev`，首页、文章目录、分类页和标签页会在启动前自动更新。
+保存后运行 `pnpm docs:dev`，文章生成器会递归读取这些分类目录，首页、文章目录、分类页和标签页会自动更新。
 
 ## 首次推送到 GitHub
 

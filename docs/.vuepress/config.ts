@@ -3,7 +3,10 @@ import { viteBundler } from "@vuepress/bundler-vite";
 import { hopeTheme } from "vuepress-theme-hope";
 import { categories, posts } from "./generated/posts";
 
-const postSidebarChildren = ["", ...posts.map((post) => post.slug)];
+const postSidebarChildren = [
+  { text: "文章", link: "/posts/" },
+  ...posts.map((post) => ({ text: post.title, link: post.path })),
+];
 const categorySlugs: Record<string, string> = {
   技术: "technology",
   学习: "learning",
