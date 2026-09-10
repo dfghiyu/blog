@@ -71,7 +71,7 @@ for (const fileName of files) {
   const tags = Array.isArray(rawTags) ? rawTags : rawTags ? [rawTags] : [];
   posts.push({
     slug,
-    path: `/posts/${slug}/`,
+    path: `/posts/${slug}.html`,
     title: values.title || slug,
     description: values.description || "",
     date: values.date || "",
