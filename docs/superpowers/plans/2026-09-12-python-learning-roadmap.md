@@ -243,3 +243,12 @@ Expected: `origin/main` 前进到新提交；若远程分叉，停止并报告�
 Run: `git status --short --branch` and `git log -1 --oneline --decorate`
 
 Expected: `main` 工作区干净，最新提交为 Python 路线提交。
+
+## Execution status
+
+- [x] Task 1：Python 专题入口
+- [x] Task 2：Windows/macOS 安装与 PyCharm 配置
+- [x] Task 3：Python Day 1 基础语法
+- [x] Task 4：Python 阶段化路线总览
+- [x] Task 5：学习索引、生成导航与内部链接检查
+- [x] Task 6：构建、提交并推送到 GitHub

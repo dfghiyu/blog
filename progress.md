@@ -29,3 +29,5 @@
 - `pnpm docs:build` 成功完成，渲染 29 个页面；Python 专题页与三篇文章路由均已生成。
 - 内部链接检查首次因 Node 24 的模块格式混用失败，待改用纯 ESM 方式重跑；该错误不影响 VuePress 构建。
 - 已用纯 ESM 检查确认 Python 文章内部链接全部解析到生成路由；四个 Python HTML 页面均已生成，代码围栏数量为偶数，`git diff --check` 通过。
+- 已创建提交 `95eb30b docs: add Python learning roadmap` 并成功推送到 `origin/main`。
+- 推送后再次执行 `pnpm docs:build`，成功生成 15 篇文章并渲染 29 个页面；最终 `main` 与 `origin/main` 一致，工作区干净。

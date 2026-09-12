@@ -53,6 +53,7 @@
 - [x] 创建 Python 专题入口、环境配置、Day 1 和路线文章
 - [x] 更新学习分类简介并重新生成内容索引
 - [x] 执行链接检查、VuePress 构建和差异复核
+- [x] 提交 Python 路线并推送到 GitHub `origin/main`
 
 ## 当前决策
 
