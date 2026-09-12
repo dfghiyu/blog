@@ -21,6 +21,8 @@ C++ 的学习内容很多：语法、内存、面向对象、标准库、模板�
 
 ## 1. 推荐顺序
 
+开始前，先完成 [VS Code 配置 C++ 开发环境](/posts/learning/cpp/cpp-environment-setup.html)，确认编译器、调试器、CMake 和基础测试命令都能运行；然后完成 [C++ 学习 Day 1](/posts/learning/cpp/cpp-day-1.html)，再按下面的阶段推进。
+
 建议先完成[环境配置文章](/posts/learning/cpp/cpp-environment-setup.html)，再按下面的顺序推进：
 
 | 阶段 | 重点 | 结果 |

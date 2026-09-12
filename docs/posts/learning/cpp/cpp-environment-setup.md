@@ -1,6 +1,6 @@
 ---
-title: VS Code 配置 C++ 开发环境：Windows MinGW-w64 与 macOS Clang
-description: 从下载 VS Code、安装 C/C++ 扩展，到配置 Windows MinGW-w64 UCRT64 和 macOS Apple Clang，完成编译、运行、调试与 IntelliSense 验证。
+title: VS Code 配置 C++ 开发环境：Windows MinGW-w64、macOS Clang 与算法测试
+description: 参考 Java 环境文章的完整配置方式，介绍 VS Code 插件、Windows MinGW-w64、macOS Apple Clang、算法刷题模板、CMake 和 CTest 测试环境。
 date: 2026-09-12
 category: 学习
 tag:
@@ -10,142 +10,343 @@ tag:
   - MSYS2
   - Clang
   - CMake
+  - 算法
   - 开发环境
 author: 韩子阳
 ---
 
-# VS Code 配置 C++ 开发环境：Windows MinGW-w64 与 macOS Clang
+# VS Code 配置 C++ 开发环境：Windows MinGW-w64、macOS Clang 与算法测试
 
-学 C++ 的第一道门槛通常不是语法，而是“代码到底由谁编译、怎样运行”。VS Code 和 C/C++ 扩展负责编辑、补全和调试入口，但不自带 g++、clang++ 或 gdb。本文把编辑器、编译器、调试器和标准库拆开，分别配置 Windows 和 macOS 两套环境。
+如果准备学习 C++ 或算法，建议先把环境搭建成“能编译、能运行、能调试、能测试、能复现”的状态。只安装 VS Code 还不够，因为 VS Code 是编辑器，不包含 C++ 编译器和调试器。
 
-- Windows：VS Code + Microsoft C/C++ 扩展 + MSYS2 UCRT64 + MinGW-w64 GCC/GDB。
-- macOS：VS Code + Microsoft C/C++ 扩展 + Xcode Command Line Tools + Apple Clang + libc++。
+本文参考 Java 环境文章的组织方式，从下载软件开始，分别配置 Windows 和 macOS，并把算法刷题中经常遇到的 bits/stdc++.h 问题讲清楚。完成本文后，你应该能够：
 
-这两条路线都可以完成 C++ 的编译、运行、调试和后续 CMake 开发。MinGW-w64 是面向 Windows 的工具链，macOS 不需要为了使用第三方库而切换到 MinGW。
+- 安装 VS Code 和正确的 C++ 扩展；
+- 在 Windows 上使用 MSYS2 UCRT64 MinGW-w64；
+- 在 macOS 上使用 Apple Clang 和 libc++；
+- 在 VS Code 中配置 IntelliSense、编译和断点调试；
+- 使用标准头文件编写跨平台算法代码；
+- 用 CMake + CTest 建立可重复的测试环境。
 
-## 1. 先弄清楚几个名字
+## 一、先看结论：两套平台方案怎么选
 
-| 名称 | 作用 | Windows | macOS |
+| 平台 | 编译器 | 调试器 | 标准库 | 推荐用途 |
+| --- | --- | --- | --- | --- |
+| Windows | MSYS2 UCRT64 MinGW-w64 GCC | GDB | libstdc++ | Windows 原生 C++、算法练习、CMake 项目 |
+| macOS | Apple Clang | LLDB | libc++ | macOS 原生 C++、算法练习、CMake 项目 |
+
+Windows 的 MinGW-w64 和 macOS 的 Apple Clang 是面向不同操作系统的工具链。macOS 不需要、也不应该为了使用第三方库而切换到 MinGW。第三方库应该按照 macOS 版本的官方文档，通过 Homebrew、CMake 或库自身的包管理方式接入。
+
+### VS Code、扩展、编译器和调试器不是一回事
+
+~~~text
+VS Code
+  └── 编辑器和开发入口
+      ├── C/C++ 扩展：补全、跳转、错误提示、调试集成
+      ├── 编译器：g++ 或 clang++，把 cpp 源文件编译成程序
+      ├── 调试器：gdb 或 lldb，负责断点、单步和变量查看
+      └── CMake：管理多文件项目、编译选项、库和测试
+~~~
+
+Microsoft 的 C/C++ 扩展不会替你安装 g++、clang++ 或 gdb。
+
+## 二、VS Code 应该安装哪些插件
+
+在 VS Code 左侧打开 Extensions：Windows/Linux 使用 Ctrl + Shift + X，macOS 使用 Command + Shift + X。
+
+| 级别 | 扩展名称 | 扩展 ID | 作用 |
 | --- | --- | --- | --- |
-| 编译器 | 把 cpp 源代码翻译成可执行文件 | g++ | clang++ |
-| 调试器 | 断点、单步执行、查看变量 | gdb | LLDB/Xcode 工具链 |
-| C++ 标准库 | 提供 iostream、string、vector 等 | GCC 的 libstdc++ | Apple 的 libc++ |
-| 编辑器 | 编写代码、调用工具 | VS Code | VS Code |
-| 构建系统 | 管理多文件、库和编译选项 | CMake | CMake |
+| 必装 | C/C++（Microsoft） | ms-vscode.cpptools | IntelliSense、错误检查、代码导航和调试入口 |
+| 推荐 | CMake Tools（Microsoft） | ms-vscode.cmake-tools | 配置、构建、运行和测试 CMake 项目 |
+| 可选 | CMake | twxs.cmake | CMakeLists.txt 语法高亮和补全 |
+| 可选 | CodeLLDB | vadimcn.vscode-lldb | macOS 或跨平台项目的另一套 LLDB 调试界面 |
 
-VS Code 的 C/C++ 扩展提供语法高亮、IntelliSense 和错误提示，但不包含编译器或调试器。看到扩展已经安装，不代表电脑已经可以编译 C++。
+C/C++ 扩展是必装项，CMake Tools 是多文件项目和测试的推荐项。VS Code 自带 Testing UI，不需要把已标记为 deprecated 的旧版 Test Explorer UI 当成必装扩展。
 
-## 2. 下载和安装 VS Code
+Code Runner 一类的一键运行扩展可能隐藏编译参数，也容易和 CMake、任务和调试配置冲突。先理解下面的真实命令，再考虑是否安装：
 
-### 2.1 Windows
+~~~bash
+g++ -std=c++17 -Wall -Wextra -pedantic main.cpp -o main
+clang++ -std=c++17 -Wall -Wextra -pedantic main.cpp -o main
+~~~
 
-打开 [Visual Studio Code 官方下载页](https://code.visualstudio.com/)，下载 Windows 版本。普通个人电脑优先选择 User setup：只为当前用户安装，通常不需要管理员权限，更新比较方便，安装程序也会把 code 命令加入 PATH。
+不要同时启用 Microsoft C/C++、clangd 等多个 C++ 智能感知引擎，否则可能出现重复补全和重复诊断。
 
-安装完成后，重新打开 PowerShell 或命令提示符，验证：
+## 三、下载和安装 VS Code
 
-```powershell
+### 3.1 Windows
+
+打开 [Visual Studio Code 官方下载页](https://code.visualstudio.com/)，普通 Intel/AMD 电脑选择 Windows x64。个人电脑学习优先选择 User Setup，通常不需要管理员权限；安装时建议勾选将 code 加入 PATH，以及“用 Code 打开文件/文件夹”的右键菜单。
+
+安装完成后，关闭已经打开的终端和 VS Code，再打开新的 PowerShell 验证：
+
+~~~powershell
 code --version
-```
+~~~
 
-如果找不到 code，完全退出已经打开的终端和 VS Code，再打开新的终端。旧进程不会自动读取安装后更新的环境变量。
+如果 code 找不到，先完全退出终端和 VS Code，再打开新的终端。环境变量只会传给新启动的进程。
 
-### 2.2 macOS
+### 3.2 macOS
 
-打开 [Visual Studio Code 官方下载页](https://code.visualstudio.com/)，根据 Mac 芯片选择 Apple silicon、Intel 或 Universal 版本。下载 dmg 后，把 Visual Studio Code.app 拖到 Applications 文件夹。
+执行下面的命令确认芯片：
 
-如果希望在终端中使用 code .：打开 VS Code 命令面板，执行 Shell Command: Install 'code' command in PATH，重新打开终端，再执行 code --version 验证。code 命令只是 VS Code 的启动命令，与后面的 clang++ 不是同一件事。
+~~~bash
+uname -m
+~~~
 
-## 3. 安装 C/C++ 扩展
+arm64 选择 Apple silicon，x86_64 选择 Intel。下载 dmg 后把 Visual Studio Code.app 拖到 Applications 文件夹。
 
-打开 VS Code 左侧 Extensions，搜索 C++，安装 Microsoft 发布的 C/C++ 扩展。快捷键是 Windows/Linux 的 Ctrl+Shift+X，或 macOS 的 Command+Shift+X。
+如果希望使用 code .：
 
-安装后打开 cpp 文件，可以立即看到语法高亮，但仍然需要安装平台对应的编译器。
+1. 打开 VS Code 命令面板；
+2. 执行 Shell Command: Install 'code' command in PATH；
+3. 重新打开终端；
+4. 执行 code --version。
 
-## 4. Windows：安装 MSYS2 和 MinGW-w64
+这里的 code 只是启动编辑器的命令，与编译 C++ 的 clang++ 没有关系。
 
-### 4.1 为什么选择 MSYS2 UCRT64
+## 四、Windows：安装 MSYS2 UCRT64 MinGW-w64
 
-MinGW-w64 让 GCC 在 Windows 上生成原生 Windows 程序。MSYS2 提供安装器、终端环境和 pacman 包管理器，可以安装和更新 MinGW-w64、GCC、GDB 以及开发库。
+### 4.1 安装和更新
 
-本文使用 UCRT64：MSYS2 当前默认推荐 UCRT64；它使用 Windows 的 Universal C Runtime；适合新建 Windows C++ 项目；可以一次安装编译器、调试器和常用开发工具。
+从 [MSYS2 官方安装页面](https://www.msys2.org/docs/installer/) 下载 64 位安装器，安装目录建议保留：
 
-不建议把多年前的独立 MinGW 安装包、随机下载的 mingw64 压缩包和 MSYS2 混用。混用后经常会出现头文件、运行时和 PATH 来自不同版本的问题。
-
-### 4.2 安装和更新 MSYS2
-
-从 [MSYS2 官方安装页面](https://www.msys2.org/docs/installer/) 下载 64 位安装器。普通情况下保留默认目录：
-
-```text
+~~~text
 C:\msys64
-```
+~~~
 
-安装结束后，打开开始菜单中的 MSYS2 UCRT64。不要先打开普通的 MSYS2 MSYS 终端来安装 Windows C++ 工具链，不同终端对应不同环境。
+安装后从开始菜单打开 MSYS2 UCRT64，不要用普通 MSYS2 MSYS 终端安装 Windows C++ 工具链。
 
-在 MSYS2 UCRT64 终端执行：
+先更新：
 
-```bash
+~~~bash
 pacman -Suy
-```
+~~~
 
-MSYS2 是滚动更新发行版。如果更新过程中提示关闭终端，按提示关闭，重新打开 MSYS2 UCRT64，再次执行 pacman -Suy。不要在更新尚未完成时继续安装工具链。
+如果更新核心组件时提示关闭终端，按提示关闭，重新打开 UCRT64，再执行一次 pacman -Suy，确认更新完成后再继续。
 
-### 4.3 安装 MinGW-w64 工具链
+### 4.2 安装编译器、调试器和构建工具
 
-在 MSYS2 UCRT64 终端执行：
+安装 MinGW-w64 工具链：
 
-```bash
+~~~bash
 pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain
-```
+~~~
 
-出现软件包列表时按 Enter 接受默认选择，再输入 Y 确认。安装完成后验证：
+验证：
 
-```bash
+~~~bash
 gcc --version
 g++ --version
 gdb --version
-```
+~~~
 
-### 4.4 配置 Windows PATH
+准备学习 CMake 和测试时，再安装：
+
+~~~bash
+pacman -S --needed mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-ninja
+cmake --version
+ninja --version
+~~~
+
+不要把旧教程中的独立 MinGW 压缩包、随机下载的 mingw64 和 MSYS2 混用。
+
+### 4.3 配置 Windows 用户 Path
 
 把下面的目录加入当前用户的 Path：
 
-```text
+~~~text
 C:\msys64\ucrt64\bin
-```
+~~~
 
-步骤：Windows 搜索“编辑账户的环境变量”→“环境变量”→用户变量中的 Path→编辑→新建。保存后重新打开 PowerShell、命令提示符和 VS Code。
+操作路径：搜索“编辑账户的环境变量” → “环境变量” → “用户变量” → Path → “编辑” → “新建”。不要覆盖 Path 原有内容，只追加目录。
 
-在新的 PowerShell 中验证：
+保存后关闭并重新打开 PowerShell、CMD 和 VS Code，验证：
 
-```powershell
+~~~powershell
 gcc --version
 g++ --version
 gdb --version
 where.exe g++
-```
+~~~
 
-where.exe g++ 应该能看到 C:\msys64\ucrt64\bin\g++.exe。MSYS2 UCRT64 终端自带 /ucrt64/bin，所以 MSYS2 内部能运行 g++，不代表从 PowerShell 启动的 VS Code 也能找到它；两个环境要分别验证。
+where.exe g++ 应该指向类似 C:\msys64\ucrt64\bin\g++.exe。MSYS2 UCRT64 终端自带 /ucrt64/bin，因此 MSYS2 终端能运行 g++，不代表从 Windows 启动的 VS Code 也能找到它；两个环境都要分别验证。
 
-## 5. 在 VS Code 中配置 Windows C++
+## 五、macOS：Apple Clang、libc++ 和 CMake
 
-### 5.1 创建工作区和测试文件
+### 5.1 安装 Command Line Tools
 
-新建 cpp-learning 文件夹，用 VS Code 的 File → Open Folder 打开文件夹，而不是只打开单独的 cpp 文件。创建 hello.cpp：
+如果还没有命令行开发工具，执行：
 
-```cpp
+~~~bash
+xcode-select --install
+~~~
+
+验证：
+
+~~~bash
+clang++ --version
+xcrun --find clang++
+~~~
+
+通常 xcrun --find clang++ 会输出 /usr/bin/clang++。macOS 的主线是 Apple Clang、LLDB 和 libc++，学习 C++ 不必为了使用 VS Code 安装完整 Xcode。
+
+### 5.2 安装 CMake 和 Ninja
+
+如果已使用 Homebrew：
+
+~~~bash
+brew install cmake ninja
+cmake --version
+ninja --version
+~~~
+
+也可以从 [CMake 官方下载页](https://cmake.org/download/) 安装。先用 which cmake 确认当前实际使用的版本。
+
+### 5.3 macOS 不要为了库切换到 MinGW
+
+bits/stdc++.h 是 GCC 生态常见的内部聚合头文件，不是 ISO C++ 标准的一部分。Apple Clang + libc++ 不保证提供它。MinGW-w64 的目标是 Windows 原生程序，不是 macOS 的库兼容层。
+
+macOS 上应当：
+
+- 使用 Apple Clang 编译 C++；
+- 使用 macOS 对应架构和 SDK 的库；
+- 通过 Homebrew 或库的官方方式安装依赖；
+- 通过 CMake 的 find_package、目标链接和配置文件接入第三方库。
+
+如果要比较 GNU GCC，可以安装 macOS 版本的 GCC；它仍然是 macOS 工具链，不是 MinGW-w64，Homebrew 命令通常会带版本后缀，例如 g++-15。
+
+## 六、解决算法中的 bits/stdc++.h
+
+### 6.1 推荐方案：直接使用标准头文件
+
+算法代码优先按功能包含标准头文件：
+
+| 功能 | 常用标准头文件 |
+| --- | --- |
+| 输入输出 | iostream |
+| 字符串 | string、string_view |
+| 动态数组 | vector |
+| 排序、二分、反转 | algorithm |
+| 求和和数值操作 | numeric |
+| 队列、优先队列 | queue |
+| 栈 | stack |
+| 集合、映射 | set、map |
+| 哈希表 | unordered_set、unordered_map |
+| 数组和元组 | array、tuple |
+| 极值和断言 | limits、cassert |
+
+跨平台算法模板：
+
+~~~cpp
+#include <algorithm>
 #include <iostream>
+#include <numeric>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 int main() {
-    std::cout << "Hello, C++!" << '\n';
+    std::vector<int> numbers{4, 1, 3, 2};
+    std::sort(numbers.begin(), numbers.end());
+
+    const int total = std::accumulate(numbers.begin(), numbers.end(), 0);
+    std::cout << "sum = " << total << '\n';
+
+    std::unordered_map<std::string, int> frequency;
+    ++frequency["cpp"];
     return 0;
 }
-```
+~~~
 
-### 5.2 配置 IntelliSense
+编译时明确指定标准和警告：
 
-打开命令面板，执行 C/C++: Select IntelliSense Configuration，选择检测到的 g++.exe。需要手动配置时，创建 .vscode/c_cpp_properties.json：
+~~~bash
+# Windows + MinGW-w64
+g++ -std=c++17 -Wall -Wextra -pedantic -g main.cpp -o main.exe
 
-```json
+# macOS + Apple Clang
+clang++ -std=c++17 -Wall -Wextra -pedantic -g main.cpp -o main
+~~~
+
+### 6.2 兼容旧模板：本地聚合头文件
+
+如果旧题解大量使用 include bits/stdc++.h，可以在项目内创建：
+
+~~~text
+include/
+└── bits/
+    └── stdc++.h
+~~~
+
+内容由项目自己维护，例如：
+
+~~~cpp
+#pragma once
+
+#include <algorithm>
+#include <array>
+#include <cassert>
+#include <cmath>
+#include <deque>
+#include <iostream>
+#include <limits>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <tuple>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
+#include <vector>
+~~~
+
+编译时增加项目头文件路径：
+
+~~~bash
+# Windows
+g++ -std=c++17 -Iinclude main.cpp -o main.exe
+
+# macOS
+clang++ -std=c++17 -Iinclude main.cpp -o main
+~~~
+
+这只是兼容旧代码，不是把它变成标准头文件。新代码仍建议直接列出标准头文件，这样 IntelliSense、其他编译器和在线评测环境更一致。
+
+## 七、在 VS Code 中配置 IntelliSense
+
+### 7.1 打开项目文件夹
+
+不要只打开一个 cpp 文件，使用 File → Open Folder 打开项目根目录，例如：
+
+~~~text
+cpp-learning/
+├── .vscode/
+├── include/
+├── src/
+├── tests/
+└── CMakeLists.txt
+~~~
+
+### 7.2 选择编译器
+
+按 F1 或 Command/Ctrl + Shift + P，执行：
+
+~~~text
+C/C++: Select IntelliSense Configuration
+~~~
+
+Windows 选择 MSYS2 UCRT64 的 g++.exe，macOS 选择 /usr/bin/clang++。
+
+compilerPath 决定扩展从哪套编译器推断标准库路径、默认宏和系统头文件。不要一开始盲目复制很多内部 includePath。
+
+Windows 的 .vscode/c_cpp_properties.json：
+
+~~~json
 {
   "configurations": [
     {
@@ -158,49 +359,11 @@ int main() {
   ],
   "version": 4
 }
-```
+~~~
 
-compilerPath 最重要。C/C++ 扩展会询问这个编译器，从它那里推断标准库头文件和默认宏。不要先复制网上的几十条 GCC 内部 includePath。
+macOS：
 
-### 5.3 编译、运行和调试
-
-第一次点击编辑器右上角的运行按钮时，选择 C/C++: g++.exe build and debug active file。扩展通常会在 .vscode/tasks.json 中保存构建任务。构建成功后，输出会出现在 VS Code 集成终端中；点击行号左侧设置断点，再选择 Debug C/C++ File 即可调试。
-
-tasks.json 负责如何编译，launch.json 负责如何启动调试器；它们都不能替代编译器安装和 PATH 配置。进入多文件项目后，应使用 CMake 管理源文件和库。
-
-### 5.4 不要依赖 *.cpp 通配符
-
-MSYS2 的 MinGW-w64 环境默认不会像某些 Unix Shell 那样自动展开所有通配符。多文件项目不要依赖 g++ src/*.cpp 这种写法。可以显式列出源文件，或者尽早使用 CMake：
-
-```bash
-cmake -B build
-cmake --build build
-```
-
-## 6. macOS：使用 Apple Clang，不安装 MinGW
-
-### 6.1 安装 Command Line Tools
-
-macOS 的 C++ 主线是 Apple Clang 和 libc++。需要时在终端执行：
-
-```bash
-xcode-select --install
-```
-
-验证工具位置：
-
-```bash
-clang++ --version
-xcrun --find clang++
-```
-
-xcrun --find clang++ 通常会输出 /usr/bin/clang++。Apple 官方说明中，Clang 编译器随 Xcode/Command Line Tools 提供，macOS 的 C++ 标准库运行时使用 libc++。
-
-### 6.2 在 VS Code 中配置 Clang
-
-选择 C/C++: Select IntelliSense Configuration，选择 /usr/bin/clang++。需要手动保存时，创建 .vscode/c_cpp_properties.json：
-
-```json
+~~~json
 {
   "configurations": [
     {
@@ -213,92 +376,347 @@ xcrun --find clang++ 通常会输出 /usr/bin/clang++。Apple 官方说明中，
   ],
   "version": 4
 }
-```
+~~~
 
-intelliSenseMode 使用平台默认值可以让扩展根据 Intel 或 Apple silicon 选择对应架构，不要把 Windows 的 windows-gcc-x64 配置复制到 macOS。
+各字段含义：
 
-### 6.3 编译、运行和调试
+- compilerPath：IntelliSense 使用的实际编译器；
+- cppStandard：编辑器提示所依据的 C++ 标准，初学阶段可用 c++17；
+- intelliSenseMode：平台和编译器对应的智能感知模式；
+- includePath：额外项目头文件目录，需要时再添加。
 
-```bash
-clang++ -std=c++17 -Wall -Wextra -g hello.cpp -o hello
-./hello
-```
+使用 CMake Tools 后，CMake 生成的编译信息可以作为 C/C++ 扩展的 configuration provider，通常比手工维护 includePath 更准确。
 
-macOS 底层调试器由 Apple 工具链提供，学习阶段不需要手动安装 Windows 的 gdb.exe。
+### 7.3 推荐工作区设置
 
-### 6.4 使用第三方库时要不要切换到 MinGW
+.vscode/settings.json：
 
-不需要。MinGW-w64 的目标平台是 Windows，它用于生成 Windows 原生程序，不是 macOS 的库兼容层。macOS 上的库要和 macOS 的编译器、架构、SDK 以及运行时匹配，通常使用 Apple Clang + libc++，再按照库的官方说明安装依赖。
+~~~json
+{
+  "C_Cpp.default.cppStandard": "c++17",
+  "C_Cpp.default.cStandard": "c17",
+  "cmake.configureOnOpen": true,
+  "cmake.buildDirectory": "${workspaceFolder}/build"
+}
+~~~
 
-CMake 可以通过 find_package、target_link_libraries 和库提供的配置文件接入第三方库。项目不应该为了一个库手动把整个编译器切换成另一套平台工具链。
+这只是编辑器默认设置，真正决定编译命令的是任务或 CMake。
 
-如果确实想使用 GNU GCC 进行对比实验，可以安装 macOS 版本的 GCC；这仍然是 macOS 工具链，不是 MinGW-w64。初学阶段保持 Apple Clang 主线更容易排查问题。
+## 八、单文件编译、运行和调试
 
-## 7. 跨平台最小验证
+创建 main.cpp：
 
-Windows + GCC：
+~~~cpp
+#include <iostream>
 
-```powershell
-g++ -std=c++17 -Wall -Wextra -g hello.cpp -o hello.exe
-./hello.exe
-```
+int main() {
+    int value = 0;
+    std::cin >> value;
+    std::cout << value * 2 << '\n';
+    return 0;
+}
+~~~
 
-macOS + Clang：
+Windows PowerShell：
 
-```bash
-clang++ -std=c++17 -Wall -Wextra -g hello.cpp -o hello
-./hello
-```
+~~~powershell
+g++ -std=c++17 -Wall -Wextra -pedantic -g main.cpp -o main.exe
+.\main.exe
+~~~
 
-三条命令都完成后，你已经验证了源文件、标准库、编译器、可执行文件和 VS Code 工作区可以连起来。
+macOS：
 
-## 8. 常见问题
+~~~bash
+clang++ -std=c++17 -Wall -Wextra -pedantic -g main.cpp -o main
+./main
+~~~
 
-### g++ 不是内部或外部命令
+确认终端编译成功后，再在 VS Code 中打开 main.cpp，点击右上角运行按钮，选择 C/C++: g++.exe build and debug active file；macOS 选择检测到的 Clang 构建选项。
 
-检查 MSYS2 是否安装 mingw-w64-ucrt-x86_64-toolchain，PATH 是否是 C:\msys64\ucrt64\bin，终端和 VS Code 是否已经重新打开，以及 where.exe g++ 找到的是否是旧版本。
+扩展通常会生成 .vscode/tasks.json 和 .vscode/launch.json：
 
-不要只把 C:\msys64\usr\bin 加入 PATH。那是 MSYS 工具目录，不等于 UCRT64 编译器目录。
+- tasks.json 负责编译；
+- launch.json 负责启动调试器；
+- 两者都不能替代编译器和调试器的安装。
+
+手写单文件任务的关键配置：
+
+~~~json
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "C++: build active file",
+      "type": "shell",
+      "windows": {
+        "command": "g++",
+        "args": ["-std=c++17", "-Wall", "-Wextra", "-pedantic", "-g", "${file}", "-o", "${fileDirname}\\${fileBasenameNoExtension}.exe"]
+      },
+      "osx": {
+        "command": "clang++",
+        "args": ["-std=c++17", "-Wall", "-Wextra", "-pedantic", "-g", "${file}", "-o", "${fileDirname}/${fileBasenameNoExtension}"]
+      },
+      "problemMatcher": ["$gcc"],
+      "group": {"kind": "build", "isDefault": true}
+    }
+  ]
+}
+~~~
+
+在行号左侧点击断点，按 F5 启动调试。Windows 的 GDB 路径应指向：
+
+~~~text
+C:\msys64\ucrt64\bin\gdb.exe
+~~~
+
+macOS 使用 LLDB；如果 cppdbg 体验不理想，再安装 CodeLLDB，避免给同一个启动项同时配置两套调试器。
+
+## 九、多文件项目：用 CMake
+
+出现多个 cpp、头文件、第三方库或测试后，应使用 CMake，不要依赖：
+
+~~~bash
+g++ src/*.cpp -o app
+~~~
+
+不同终端对通配符的处理不同。CMake 中显式列出源文件：
+
+~~~cmake
+cmake_minimum_required(VERSION 3.20)
+project(cpp_learning LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+add_executable(cpp_learning
+    src/main.cpp
+    src/solution.cpp
+)
+
+target_include_directories(cpp_learning PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_compile_options(cpp_learning PRIVATE
+    $<$<CXX_COMPILER_ID:GNU,Clang>:-Wall -Wextra -pedantic>
+)
+~~~
+
+配置和构建：
+
+~~~bash
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
+cmake --build build
+~~~
+
+如果使用 Visual Studio 这类多配置生成器：
+
+~~~powershell
+cmake --build build --config Debug
+~~~
+
+## 十、配置算法练习的测试环境
+
+### 10.1 第一层：单文件快速检查
+
+每道算法题至少做三件事：使用警告编译，用最小、边界和极端样例运行，把可复用逻辑写成函数并用 assert 做回归检查。
+
+~~~cpp
+#include <cassert>
+
+int max_value(int left, int right) {
+    return left > right ? left : right;
+}
+
+int main() {
+    assert(max_value(2, 5) == 5);
+    assert(max_value(-3, -7) == -3);
+    assert(max_value(4, 4) == 4);
+    return 0;
+}
+~~~
+
+返回 0 表示通过，断言失败会返回非零状态，适合用命令行或 VS Code 任务快速验证。
+
+### 10.2 第二层：CMake + CTest
+
+练习项目结构：
+
+~~~text
+algorithm-practice/
+├── CMakeLists.txt
+├── src/
+│   ├── sum.cpp
+│   └── sum.hpp
+└── tests/
+    └── sum_test.cpp
+~~~
+
+src/sum.hpp：
+
+~~~cpp
+#pragma once
+int sum(int left, int right);
+~~~
+
+src/sum.cpp：
+
+~~~cpp
+#include "sum.hpp"
+
+int sum(int left, int right) {
+    return left + right;
+}
+~~~
+
+tests/sum_test.cpp：
+
+~~~cpp
+#include <cassert>
+#include "sum.hpp"
+
+int main() {
+    assert(sum(2, 3) == 5);
+    assert(sum(-2, 2) == 0);
+    assert(sum(0, 0) == 0);
+    return 0;
+}
+~~~
+
+CMakeLists.txt：
+
+~~~cmake
+cmake_minimum_required(VERSION 3.20)
+project(algorithm_practice LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+add_library(solution src/sum.cpp)
+target_include_directories(solution PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+add_executable(sum_test tests/sum_test.cpp)
+target_link_libraries(sum_test PRIVATE solution)
+
+include(CTest)
+if(BUILD_TESTING)
+    add_test(NAME sum_test COMMAND sum_test)
+endif()
+~~~
+
+执行：
+
+~~~bash
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+cmake --build build
+ctest --test-dir build --output-on-failure
+~~~
+
+include(CTest) 会生成测试信息，ctest 从 build 目录发现并运行测试；--output-on-failure 会打印失败程序的输出。
+
+### 10.3 在 VS Code 中运行 CMake 测试
+
+安装 ms-vscode.cmake-tools 后：
+
+1. 打开包含 CMakeLists.txt 的项目根目录；
+2. 在底部状态栏选择 GCC 或 Clang Kit；
+3. 执行 Configure；
+4. 执行 Build；
+5. 打开左侧 Testing 面板运行或调试测试；
+6. 也可以执行 ctest --test-dir build --output-on-failure。
+
+项目变大后，可以按 [GoogleTest CMake Quickstart](https://google.github.io/googletest/quickstart-cmake.html) 接入 GoogleTest。第一次配置可能联网下载依赖；CI 或团队环境不允许联网时，应固定版本并准备缓存或包管理方案。
+
+## 十一、调试与运行时检查
+
+学习阶段使用 -g 和警告，不要一开始加 -O3：
+
+~~~bash
+clang++ -std=c++17 -Wall -Wextra -pedantic -g main.cpp -o main
+~~~
+
+macOS 的 Apple Clang 还可以尝试 sanitizer：
+
+~~~bash
+clang++ -std=c++17 -Wall -Wextra -g \
+  -fsanitize=address,undefined \
+  -fno-omit-frame-pointer \
+  main.cpp -o main
+./main
+~~~
+
+它们可以帮助发现越界、悬空指针和一部分未定义行为。Windows MinGW-w64 对 sanitizer 的支持可能因版本不同而不同；如果参数不支持，先回到普通 Debug 编译。
+
+## 十二、常见问题排查
+
+### g++ 不是内部或外部命令 / command not found
+
+检查工具链是否安装，Path 是否为 C:\msys64\ucrt64\bin，是否重新打开终端和 VS Code，以及 where.exe g++ 找到的是否是旧版 MinGW。
+
+### 能编译但 IntelliSense 标红
+
+执行 C/C++: Select IntelliSense Configuration，选择实际使用的 g++ 或 clang++。CMake 项目确认已 Configure，并检查旧的 c_cpp_properties.json 是否覆盖了项目配置。
+
+### bits/stdc++.h 找不到
+
+优先改成标准头文件；兼容旧模板时，在项目中创建 include/bits/stdc++.h，并在编译命令中加 -Iinclude。不要为了这个头文件给 macOS 安装 MinGW。
 
 ### gdb 找不到
 
-确认安装的是完整工具链组：
+在 MSYS2 UCRT64 中重新执行：
 
-```bash
+~~~bash
 pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain
-```
+~~~
 
-之后重新打开终端并验证 gdb --version。如果 VS Code 已经生成旧的 launch.json，检查 miDebuggerPath 是否仍然指向旧目录。
+确认 C:\msys64\ucrt64\bin 在 Windows Path 中，不要下载来源不明的 gdb.exe 混入当前工具链。
 
-### 能编译，但 IntelliSense 仍然报错
+### VS Code 反复询问编译器
 
-打开命令面板执行 C/C++: Select IntelliSense Configuration，选择实际使用的 g++ 或 clang++。手动配置时优先检查 compilerPath，不要先盲目添加大量 includePath。
+确认 VS Code 集成终端中能运行 g++ --version 或 clang++ --version，打开的是项目文件夹，compilerPath 指向实际编译器，CMake 项目已执行 Configure。
 
-### macOS 找不到 xcrun 或 clang++
+### macOS xcrun 找不到 Clang
 
-运行 xcode-select --install。如果系统安装过但路径损坏，根据 Apple 文档检查当前开发者目录，并以 xcrun --find clang++ 能否找到编译器为准。
+执行：
 
-## 9. 安装完成检查表
+~~~bash
+xcode-select --install
+xcode-select -p
+xcrun --find clang++
+~~~
 
-- [ ] VS Code 可以打开一个 C++ 文件夹。
-- [ ] Microsoft C/C++ 扩展已经安装。
-- [ ] Windows 能运行 g++ --version 和 gdb --version，或 macOS 能运行 clang++ --version 和 xcrun --find clang++。
-- [ ] hello.cpp 能在终端编译和运行。
-- [ ] IntelliSense 能跳转到 std::cout、std::string 等标准库类型。
-- [ ] 可以设置断点并启动调试。
-- [ ] 明白 Windows 的 MinGW-w64 与 macOS 的 Apple Clang 是两条不同的工具链。
-- [ ] 明白第三方库应通过对应平台的官方安装方式和 CMake 接入，不需要为了 macOS 的库切换到 MinGW。
+不要删除系统开发工具目录来“清理环境”。
+
+## 十三、完成检查表
+
+- [ ] VS Code 能打开一个 C++ 项目文件夹。
+- [ ] 已安装 ms-vscode.cpptools。
+- [ ] 多文件项目已安装 ms-vscode.cmake-tools。
+- [ ] Windows 能运行 g++ --version、gdb --version；或 macOS 能运行 clang++ --version、xcrun --find clang++。
+- [ ] hello.cpp 能编译、运行和设置断点。
+- [ ] IntelliSense 能识别 vector、string 和 sort。
+- [ ] 算法模板使用标准头文件，而不是依赖 bits/stdc++.h。
+- [ ] 已知如何用 CMake 配置、构建和运行 CTest。
+- [ ] 明白 macOS 使用 Apple Clang + libc++，不需要为了库切换到 MinGW。
 
 ## 参考资料
 
 - [Visual Studio Code 官方下载页](https://code.visualstudio.com/)
-- [VS Code：C/C++ for Visual Studio Code](https://code.visualstudio.com/docs/languages/cpp)
+- [VS Code：C/C++ 官方文档](https://code.visualstudio.com/docs/languages/cpp)
+- [Microsoft C/C++ 扩展 Marketplace](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
 - [VS Code：Using GCC with MinGW](https://code.visualstudio.com/docs/cpp/config-mingw)
-- [VS Code：C++ extension settings reference](https://code.visualstudio.com/docs/cpp/customize-cpp-settings)
+- [VS Code：C++ IntelliSense 配置](https://code.visualstudio.com/docs/cpp/configure-intellisense)
+- [VS Code：CMake Tools 教程](https://code.visualstudio.com/docs/cpp/cmake-linux)
+- [VS Code：Testing 官方文档](https://code.visualstudio.com/docs/debugtest/testing)
 - [MSYS2 安装文档](https://www.msys2.org/docs/installer/)
 - [MSYS2 环境说明](https://www.msys2.org/docs/environments/)
 - [MSYS2 更新文档](https://www.msys2.org/docs/updating/)
 - [Apple：C++ language support](https://developer.apple.com/xcode/cpp/)
 - [Apple：Installing the command-line tools](https://developer.apple.com/documentation/xcode/installing-the-command-line-tools)
-- [CMake Tutorial](https://cmake.org/cmake/help/latest/guide/tutorial/index.html)
+- [cppreference：C++ 标准库](https://en.cppreference.com/w/cpp/standard_library)
+- [CMake：Testing and CTest](https://cmake.org/cmake/help/latest/guide/tutorial/Testing%20and%20CTest.html)
+- [GoogleTest：CMake Quickstart](https://google.github.io/googletest/quickstart-cmake.html)
+- [CodeLLDB Marketplace](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb)
 - [参考文章：用 VS Code 配置 C++ 环境](https://blog.csdn.net/Yhw20040823/article/details/147520781)

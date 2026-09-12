@@ -85,3 +85,24 @@
 
 - [Python Using Python on Windows](https://docs.python.org/3.14/using/windows.html)
 - [PowerShell about_Environment_Variables](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables)
+
+## C++ VS Code 与算法测试环境优化资料（2026-09-12）
+
+- VS Code 官方 C++ 文档与 Microsoft C/C++ Marketplace 页面都明确说明：`ms-vscode.cpptools` 提供 IntelliSense、编辑和调试集成，但不包含编译器或调试器。
+- CMake Tools 的官方 VS Code 教程适合多文件项目；它可以作为 C/C++ 扩展的 configuration provider，避免手写一堆平台相关 includePath。
+- VS Code 官方测试文档已经提供原生 Testing UI；旧版 Test Explorer UI Marketplace 页面标记为 deprecated，因此文章不把它列为必装插件。
+- C++ 标准库头文件应按功能从 `<algorithm>`、`<vector>`、`<string>`、`<queue>`、`<numeric>` 等标准头文件中选择。`bits/stdc++.h` 是 GCC 生态常见的非标准聚合头文件，Apple Clang + libc++ 不保证提供它。
+- macOS 的解决方案不是安装 MinGW，而是继续使用 Apple Clang + libc++；如果要兼容旧算法模板，可以在项目 `include/bits/stdc++.h` 放一个列出标准头文件的本地兼容文件，并通过 `-Iinclude` 使用，但新代码仍推荐直接写标准头文件。
+- CMake/CTest 官方流程使用 `enable_testing()`、`add_test()` 和 `ctest --test-dir build --output-on-failure`；GoogleTest 官方 CMake quickstart 使用 `FetchContent`、`gtest_discover_tests` 和 CTest。
+
+### 新增资料链接
+
+- [VS Code C/C++ 官方文档](https://code.visualstudio.com/docs/languages/cpp)
+- [Microsoft C/C++ 扩展 Marketplace](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
+- [VS Code CMake Tools 教程](https://code.visualstudio.com/docs/cpp/cmake-linux)
+- [VS Code C++ IntelliSense 配置](https://code.visualstudio.com/docs/cpp/configure-intellisense)
+- [VS Code 官方测试文档](https://code.visualstudio.com/docs/debugtest/testing)
+- [cppreference 标准库头文件](https://en.cppreference.com/w/cpp/standard_library)
+- [CMake Testing and CTest](https://cmake.org/cmake/help/latest/guide/tutorial/Testing%20and%20CTest.html)
+- [GoogleTest CMake Quickstart](https://google.github.io/googletest/quickstart-cmake.html)
+- [CodeLLDB Marketplace](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb)

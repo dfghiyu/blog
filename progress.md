@@ -38,3 +38,13 @@
 - 已用纯 ESM 检查确认 Python 文章内部链接全部解析到生成路由；四个 Python HTML 页面均已生成，代码围栏数量为偶数，`git diff --check` 通过。
 - 已创建提交 `95eb30b docs: add Python learning roadmap` 并成功推送到 `origin/main`。
 - 推送后再次执行 `pnpm docs:build`，成功生成 15 篇文章并渲染 29 个页面；最终 `main` 与 `origin/main` 一致，工作区干净。
+
+## C++ VS Code 与算法测试环境优化（2026-09-12）
+
+- 用户要求参考 Java 文章进一步细化 C++ VS Code 安装，并补齐算法刷题、macOS `bits/stdc++.h` 替代方案、插件和测试环境。
+- 已重新核对 VS Code C/C++、CMake Tools、CTest、GoogleTest、cppreference 和 CodeLLDB 官方资料。
+- 资料结论：`bits/stdc++.h` 非标准；macOS 主线继续使用 Apple Clang + libc++，算法代码优先使用标准头文件。
+- 已重写 `cpp-environment-setup.md`，补充插件分档、Windows/macOS 完整安装、标准头文件模板、本地兼容头、单文件任务、CMake/CTest、GoogleTest 入口、sanitizer 和排错清单。
+- 已更新 C++ 专题入口和路线文章的阅读顺序链接。
+- `pnpm docs:generate` 成功生成 15 篇文章、4 个分类、46 个标签；内部文章链接检查通过。
+- `pnpm docs:build` 成功渲染 29 个页面；C++ 专题入口、环境、Day 1、路线四个页面均生成；4 个 JSON 配置示例解析通过；`git diff --check` 通过。
