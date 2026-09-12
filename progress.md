@@ -21,4 +21,11 @@
 - 已检查 Java、Linux、C++ 专题风格、学习分类入口、生成脚本和动态 sidebar 配置。
 - 已检索 Python 3.14.7、Windows Python Install Manager、macOS Python 安装、PyCharm interpreter、venv/pip、Django 官方资料。
 - 用户提供的 CSDN DevPress 页面当前无法稳定抓取正文，已将其作为辅助参考，关键技术步骤以官方资料为准。
-- 已写入 `docs/superpowers/specs/2026-09-12-python-learning-roadmap-design.md`，待用户复核后进入实施计划阶段。
+- 已写入并完成用户复核的设计文档 `docs/superpowers/specs/2026-09-12-python-learning-roadmap-design.md`。
+- 用户复核设计后确认开始，并要求完成后自动提交到 GitHub。
+- 已写入并自检实施计划 `docs/superpowers/plans/2026-09-12-python-learning-roadmap.md`，本轮采用直接执行。
+- 已创建 Python 专题入口、双平台环境与 PyCharm 配置、Day 1 基础语法、阶段化路线四篇文章。
+- 已将“学习”分类简介补充 Python 与 Django；`pnpm docs:generate` 成功生成 15 篇文章、4 个分类和 46 个标签。
+- `pnpm docs:build` 成功完成，渲染 29 个页面；Python 专题页与三篇文章路由均已生成。
+- 内部链接检查首次因 Node 24 的模块格式混用失败，待改用纯 ESM 方式重跑；该错误不影响 VuePress 构建。
+- 已用纯 ESM 检查确认 Python 文章内部链接全部解析到生成路由；四个 Python HTML 页面均已生成，代码围栏数量为偶数，`git diff --check` 通过。
