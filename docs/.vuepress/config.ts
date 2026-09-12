@@ -6,6 +6,7 @@ import { posts, type BlogPost } from "./generated/posts";
 type FolderNode = {
   name: string;
   path: string;
+  parent?: FolderNode;
   posts: BlogPost[];
   children: Map<string, FolderNode>;
 };
@@ -30,6 +31,7 @@ for (const post of posts) {
       child = {
         name: segment,
         path: `/posts/${pathSegments.join("/")}/`,
+        parent: current,
         posts: [],
         children: new Map(),
       };
@@ -66,7 +68,11 @@ const folderSidebarItem = (folder: FolderNode, expanded = false) => ({
 
 const folderSidebars: Record<string, ReturnType<typeof folderSidebarItem>[]> = {};
 const addFolderSidebar = (folder: FolderNode): void => {
-  folderSidebars[folder.path] = [folderSidebarItem(folder, true)];
+  const parentLink = folder.parent && folder.parent !== postTree
+    ? { text: `← ${folder.parent.name}`, link: folder.parent.path }
+    : { text: "← 全部文章", link: "/posts/" };
+
+  folderSidebars[folder.path] = [parentLink, folderSidebarItem(folder, true)];
   for (const child of folder.children.values()) addFolderSidebar(child);
 };
 
