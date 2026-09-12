@@ -19,7 +19,7 @@ author: 韩子阳
 
 本文以 Windows 11/Windows 10 为主线，同时整理 macOS Intel 和 Apple Silicon 的完整步骤，带你完成：
 
-- 安装 JDK 25
+- 安装 JDK 25（Windows 使用安装程序，macOS 支持官方 DMG 和 Homebrew）
 - 配置 JAVA_HOME 和 Path
 - 验证 java、javac 是否可用
 - 安装 IntelliJ IDEA 2026.2
@@ -268,7 +268,46 @@ Oracle JDK 在 macOS 上通常安装到：
 
     /usr/libexec/java_home -V
 
-### 3. 先直接验证
+### 3. 使用 Homebrew 安装（可选）
+
+如果你已经在使用 Homebrew，或者希望以后更方便地升级和管理多个 JDK，可以使用 Homebrew 安装 Eclipse Temurin 25。Temurin 是 Eclipse Foundation 提供的 OpenJDK 发行版，不是 Oracle JDK；两者都可以用于 Java 和 Spring Boot 学习。
+
+先确认 Homebrew 是否已经安装：
+
+    brew --version
+
+如果提示找不到 `brew`，请先打开 [Homebrew 官方安装文档](https://docs.brew.sh/Installation)，复制官方页面当前提供的安装命令完成安装。Homebrew 默认安装位置是：
+
+    Apple Silicon：/opt/homebrew
+    Intel：/usr/local
+
+Homebrew 安装完成后，如果终端提示执行 `brew shellenv`，请按照终端给出的提示完成配置，然后重新打开终端并验证：
+
+    brew --version
+
+安装 JDK 25：
+
+    brew update
+    brew install --cask temurin@25
+
+Homebrew 的 `temurin@25` Cask 会根据 macOS 芯片选择对应的安装包。安装后仍然要检查系统是否发现 JDK：
+
+    /usr/libexec/java_home -V
+    java -version
+    javac -version
+
+如果需要让当前用户的终端默认使用 JDK 25，可以将下面两行加入 `~/.zshrc`：
+
+    export JAVA_HOME=$(/usr/libexec/java_home -v 25)
+    export PATH="$JAVA_HOME/bin:$PATH"
+
+然后执行：
+
+    source ~/.zshrc
+    echo $JAVA_HOME
+
+选择建议：想使用 Oracle JDK 就走官方 DMG；想通过命令行升级、切换和管理 OpenJDK，就走 Homebrew。两种方式不要重复安装后再混着配置，否则容易产生多个 JDK 路径。
+### 4. 先直接验证
 
 打开新的终端窗口，执行：
 
@@ -277,7 +316,7 @@ Oracle JDK 在 macOS 上通常安装到：
 
 如果能看到 Java 25 的版本信息，说明 JDK 已经安装成功。
 
-### 4. 配置 JAVA_HOME 和 Path
+### 5. 配置 JAVA_HOME 和 Path
 
 macOS 默认使用 zsh。编辑当前用户的 ~/.zshrc：
 
@@ -310,7 +349,7 @@ JAVA_HOME 应该指向类似下面的路径：
 
     /Library/Java/JavaVirtualMachines/jdk-25.jdk/Contents/Home
 
-### 5. macOS 多版本 JDK
+### 6. macOS 多版本 JDK
 
 如果同时安装了 JDK 21 和 JDK 25，可以使用 java_home 切换当前终端使用的版本。
 
@@ -326,7 +365,7 @@ JAVA_HOME 应该指向类似下面的路径：
 
 如果需要永久使用某个版本，就把对应版本写入 ~/.zshrc。不建议把多个版本的 bin 路径硬编码在 Path 中，否则很容易出现版本顺序混乱。
 
-### 6. macOS 常见问题
+### 7. macOS 常见问题
 
 #### java_home -v 25 找不到版本
 
@@ -710,6 +749,7 @@ Windows 的 JAVA_HOME 不要带 bin；macOS 的 JDK 根目录需要指向 Conten
     which java
     which javac
     /usr/libexec/java_home -V
+    brew --version  # 如果使用了 Homebrew 安装
 
 ### IDEA
 
@@ -766,6 +806,8 @@ Windows 的 JAVA_HOME 不要带 bin；macOS 的 JDK 根目录需要指向 Conten
 - [JetBrains Student Pack](https://www.jetbrains.com/academy/student-pack/)
 - [Educational Licenses FAQ](https://sales.jetbrains.com/hc/en-gb/articles/207241195-Do-you-offer-free-educational-licenses-for-students-and-teachers)
 - [Spring Boot System Requirements](https://docs.spring.io/spring-boot/system-requirements.html)
+- [Homebrew Installation](https://docs.brew.sh/Installation)
+- [Homebrew Formulae：temurin@25](https://formulae.brew.sh/cask/temurin@25)
 - [IDEA安装教程配置java环境（超详细）](https://blog.csdn.net/Libra1313/article/details/156986905)（2026-01-18；用于参考 Windows 安装向导、环境变量和 IDEA 附加任务的操作顺序，本文按新版本重新整理）
 
 中文结构参考：
