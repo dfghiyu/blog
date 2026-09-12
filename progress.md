@@ -14,3 +14,11 @@
 - `pnpm docs:build` 成功完成 VuePress 编译并渲染 25 个页面。
 - 四个 C++ 页面均已生成到 `docs/.vuepress/dist/posts/learning/cpp/`；学习分类页与专题 sidebar 均包含预期链接。
 - `git diff --check` 通过。
+
+## Python 路线任务（2026-09-12）
+
+- 用户确认目标项目为 `/Users/jingzhe/Desktop/blog`，并确认采用“四篇首发”的组织方式。
+- 已检查 Java、Linux、C++ 专题风格、学习分类入口、生成脚本和动态 sidebar 配置。
+- 已检索 Python 3.14.7、Windows Python Install Manager、macOS Python 安装、PyCharm interpreter、venv/pip、Django 官方资料。
+- 用户提供的 CSDN DevPress 页面当前无法稳定抓取正文，已将其作为辅助参考，关键技术步骤以官方资料为准。
+- 已写入 `docs/superpowers/specs/2026-09-12-python-learning-roadmap-design.md`，待用户复核后进入实施计划阶段。
