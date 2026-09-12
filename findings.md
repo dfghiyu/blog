@@ -71,3 +71,17 @@
 - Python 3.14 官方教程覆盖解释器、控制流、数据结构、模块、输入输出、异常和类，适合作为 Day 1 与总路线的官方延伸链接。
 - Django 官方下载页当前显示可用的 Django 6.1.1 安装命令；Django 6.1 发布说明说明其支持窗口与新的年度发布节奏有关。路线文章可把 Django 6.x 作为 Web 主线，但不在首批环境文章中绑定过多框架版本。
 - 用户提供的 CSDN DevPress 页面通过内置网页检索无法稳定打开正文（返回内部错误），因此仅作为用户给出的参考入口；安装和配置步骤以 Python、JetBrains、Packaging、Django 官方资料为准。
+
+## Python 环境配置反馈补充（2026-09-12）
+
+- 用户反馈原环境文章虽然提到 PATH，但缺少“全局环境变量”的完整引导，并特别关注安装器中的勾选项；后续内容需要仿照 Java 环境文章的手把手结构。
+- Python 3.14 官方 Windows 文档推荐 Python Install Manager；首次安装运行时可能提示将 %LocalAppData%\Python\bin 加入 PATH，运行时自己的 Scripts 目录也可能需要加入 PATH。
+- Windows 环境变量应区分当前终端、用户变量和系统变量；个人电脑优先使用用户变量，修改 Path 时追加目录而不是覆盖原值。Python 学习不需要照搬 Java 的 JAVA_HOME，普通项目也不应随意设置 PYTHONPATH。
+- Windows 图形界面入口可使用“编辑账户的环境变量”→“环境变量”→“用户变量”→“Path”；修改后必须重新打开终端和 PyCharm Terminal。
+- 传统 Python Windows 安装器需要明确说明 Add python.exe to PATH、Add Python to environment variables、pip、py launcher、Install for all users 等选项的取舍。
+- macOS 个人用户的持久 PATH 适合放在 ~/.zshrc；Homebrew 路径应先用 brew --prefix 确认，不能删除或覆盖 /usr/bin/python3。从 Dock 启动的 PyCharm 不一定继承 Terminal 中的临时变量，因此仍需在项目设置里明确选择 .venv。
+
+## 资料链接补充
+
+- [Python Using Python on Windows](https://docs.python.org/3.14/using/windows.html)
+- [PowerShell about_Environment_Variables](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables)

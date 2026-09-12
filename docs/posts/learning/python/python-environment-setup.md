@@ -61,7 +61,56 @@ python -c "print('Python Windows 环境正常')"
 
 看到 Python 版本和中文提示，就说明命令已经可以被终端找到。
 
-### 2.2 Windows 的命令区别
+### 2.2 如果下载的是传统 Windows 安装器
+
+Python 官方当前更推荐 Python Install Manager，但下载页仍可能出现传统的 Windows 安装程序。它的安装界面更像很多教程里的“勾选 PATH”流程。如果你下载的是 .exe 安装器，重点看下面这些选项。
+
+#### 第一个安装页面
+
+安装器打开后，通常会看到：
+
+| 选项 | 第一次安装的建议 | 作用 |
+| --- | --- | --- |
+| Install Now | 适合想快速安装的人 | 使用默认目录和默认组件 |
+| Customize installation | 想看清组件或自定义目录时选择 | 进入详细安装流程 |
+| Add python.exe to PATH | 建议勾选 | 把 Python 和 Scripts 目录加入当前用户的 PATH |
+| Use admin privileges when installing py.exe | 个人电脑通常可以不勾选 | 是否用管理员权限安装 py 启动器 |
+
+最容易漏掉的是 Add python.exe to PATH。建议第一次安装时勾选它，这样安装结束后可以直接在 CMD、PowerShell 和 PyCharm Terminal 中使用 python 和 pip。这个选项只负责命令查找，不等于创建项目虚拟环境。
+
+如果你已经安装过 Python，先不要直接覆盖旧版本。可以先取消安装，执行 where python 和 py list，确认电脑里有哪些版本，再决定使用 Install Manager、传统安装器，还是保留现有版本。
+
+#### 选择 Customize installation 后
+
+在 Optional Features 页面，第一次学习通常保留下面这些选项：
+
+| 组件 | 建议 | 说明 |
+| --- | --- | --- |
+| Documentation | 勾选 | 安装本地 Python 文档 |
+| pip | 必须勾选 | 安装和管理第三方包 |
+| tcl/tk and IDLE | 建议勾选 | 使用 IDLE 和 tkinter 时需要 |
+| Python test suite | 可不勾选 | 普通学习和项目开发暂时用不到 |
+| py launcher | 建议勾选 | 方便管理多个 Python 版本 |
+| for all users | 按需 | 是否允许电脑上的所有用户使用，不是所有人都需要 |
+
+点击 Next 进入 Advanced Options 后，重点检查：
+
+| 选项 | 建议 |
+| --- | --- |
+| Install for all users | 个人电脑一般不勾选；需要所有 Windows 用户共用且拥有管理员权限时再勾选 |
+| Add Python to environment variables | 建议勾选 |
+| Precompile standard library | 可以保留默认值 |
+| Download debugging symbols / debug binaries | 普通学习不需要 |
+
+安装目录可以使用默认目录。若自定义目录，建议记住 Python 根目录，例如：
+
+~~~text
+C:\Users\你的用户名\AppData\Local\Programs\Python\Python314
+~~~
+
+不要把 PATH 配成 Python 根目录之外的随机目录。传统安装器通常会把 Python 根目录和 Scripts 目录一并加入 PATH；安装完成后仍然要用 where python 和 python -m pip --version 验证实际结果。
+
+### 2.3 Windows 的命令区别
 
 - python：启动当前默认 Python，日常运行脚本和创建虚拟环境时最常用。
 - py：适合管理多个 Python 版本，例如 py -V:3.14 可以指定一个运行时。
@@ -70,7 +119,7 @@ python -c "print('Python Windows 环境正常')"
 
 普通学习项目不需要记住所有参数。先保证 python --version、py --version 和 py list 能给出合理结果，再进入虚拟环境。
 
-### 2.3 Windows 的 PATH 与执行别名
+### 2.4 Windows 的 PATH 与执行别名
 
 安装 Python 时，Install Manager 可能会询问是否把全局别名目录加入 PATH。默认目录通常是：
 
@@ -86,6 +135,82 @@ python -c "print('Python Windows 环境正常')"
 4. 再运行 where python、where py，确认命令实际来自哪里。
 
 如果电脑上已经使用传统 Python 安装器，也不必为了迁移而删除旧版本。先查看 where python 和 py list 的结果，确定项目要使用哪个解释器，再在 PyCharm 中明确选择它。
+
+### 2.5 Windows 全局环境变量：PATH、用户变量与系统变量
+
+这里要把四个概念分开：
+
+| 概念 | 生效范围 | Python 学习中的处理方式 |
+| --- | --- | --- |
+| 当前终端变量 | 只对当前 CMD、PowerShell 窗口生效 | 适合临时测试，关掉窗口就失效 |
+| 用户变量 | 当前 Windows 用户长期生效 | 个人电脑优先配置这里 |
+| 系统变量 | 电脑上的所有用户长期生效 | 只有明确需要所有用户共用时才配置 |
+| 项目虚拟环境 | 只服务一个项目 | 第三方包优先放在 .venv，不要污染全局 Python |
+
+#### 推荐的配置原则
+
+1. 个人学习电脑优先修改“用户变量”中的 Path。
+2. 只有在电脑由多人共用，或管理员明确要求时，才修改“系统变量”中的 Path。
+3. 修改 Path 时点击“新建”追加目录，不要把原来的整行内容全部覆盖。
+4. Python 通常不要求设置 PYTHON_HOME。先把 PATH 和项目 .venv 配好，比照搬 Java 的 JAVA_HOME 更合适。
+5. 普通项目不要设置 PYTHONPATH。它会额外改变模块搜索路径，容易让“本机能运行、换电脑就报错”或导入了错误版本的包。
+
+#### 通过 Windows 图形界面永久配置
+
+1. 按 Win + S，搜索“编辑账户的环境变量”。
+2. 打开“编辑账户的环境变量”。
+3. 点击“环境变量”。
+4. 在“用户变量”区域选中 Path，点击“编辑”。
+5. 点击“新建”，只添加实际存在的目录。
+6. 点击“确定”保存所有窗口。
+7. 关闭并重新打开 CMD、PowerShell、Windows Terminal 和 PyCharm Terminal。
+
+根据安装方式，可能需要检查这些目录：
+
+~~~text
+%UserProfile%\AppData\Local\Microsoft\WindowsApps
+%LocalAppData%\Python\bin
+传统安装器的 Python 根目录
+传统安装器的 Python 根目录\Scripts
+~~~
+
+不要把上面四项不加判断地全部添加。Install Manager、传统安装器和 Windows 应用执行别名使用的目录不同，以 where python、where py 和 py list 的结果为准。
+
+#### 临时变量和永久变量的区别
+
+PowerShell 中直接执行下面的命令，只对当前窗口生效：
+
+~~~powershell
+$env:PYTHON_LEARNING = "true"
+$env:Path += ";C:\Tools\Python"
+~~~
+
+关闭窗口后，这些设置就会消失。若确实需要为当前用户永久保存自定义变量，可以使用：
+
+~~~powershell
+[Environment]::SetEnvironmentVariable("PYTHON_LEARNING", "true", "User")
+~~~
+
+对于 Path，初学者更推荐使用上面的图形界面追加目录，因为直接写入 Path 时很容易误覆盖原有配置。可以先查看用户 Path：
+
+~~~powershell
+[Environment]::GetEnvironmentVariable("Path", "User")
+~~~
+
+#### 配置后这样验收
+
+新开一个 PowerShell 窗口，执行：
+
+~~~powershell
+$env:Path -split ";"
+where python
+where py
+python --version
+python -m pip --version
+py list
+~~~
+
+如果 where python 显示多个路径，Windows 会使用排在前面的那个。不要只看版本号，还要确认路径确实是你希望使用的安装。进入项目后，再创建 .venv，让第三方包与全局安装隔离。
 
 ## 3. macOS 安装 Python
 
@@ -110,7 +235,76 @@ python3 -c "print('Python macOS 环境正常')"
 
 which python3 用来确认当前命令实际指向哪里。如果它指向的是 /usr/bin/python3，说明系统路径排在前面，需要根据所选安装方式调整 PATH，或者直接在 PyCharm 中选择目标解释器。
 
-### 3.2 方式二：Homebrew
+### 3.2 macOS 全局环境变量与 PATH
+
+macOS 中通常把“全局变量”理解为对当前用户的 shell 持久生效的环境变量。个人学习时优先配置用户自己的 ~/.zshrc，不要一开始就修改 /etc/paths 或其他系统级文件。
+
+#### 先确认 Homebrew 的实际目录
+
+如果使用 Homebrew，先执行：
+
+~~~bash
+brew --prefix
+~~~
+
+Apple Silicon Mac 通常是 /opt/homebrew，Intel Mac 通常是 /usr/local，但应以命令实际输出为准。
+
+#### 永久追加 PATH
+
+编辑当前用户的 zsh 配置：
+
+~~~bash
+nano ~/.zshrc
+~~~
+
+根据 brew --prefix 的结果，在文件末尾加入对应的一行。Apple Silicon 示例：
+
+~~~bash
+export PATH="/opt/homebrew/bin:$PATH"
+~~~
+
+Intel 示例：
+
+~~~bash
+export PATH="/usr/local/bin:$PATH"
+~~~
+
+保存后让配置立即生效：
+
+~~~bash
+source ~/.zshrc
+~~~
+
+不要把 /usr/bin/python3 从 PATH 中删除，也不要为了“统一版本”去覆盖系统目录。先用 which python3、type -a python3 和 Python 的 sys.executable 确认当前解释器。
+
+#### 自定义变量和 PYTHONPATH
+
+如果只是想测试环境变量，可以在当前终端执行：
+
+~~~bash
+export PYTHON_LEARNING=true
+echo "$PYTHON_LEARNING"
+~~~
+
+想让它长期对当前用户生效，再把 export PYTHON_LEARNING=true 写入 ~/.zshrc。普通 Python 项目不建议把项目源码目录写进 PYTHONPATH；使用项目 .venv、清晰的包结构和 PyCharm 解释器配置更容易复现。
+
+从 Dock 启动的 PyCharm 不一定继承你在 Terminal 中临时设置的变量。因此，项目解释器仍然要在 PyCharm 的设置中明确选择，不能只依赖 PATH。
+
+#### macOS 配置验收
+
+重新打开 Terminal，执行：
+
+~~~bash
+echo "$PATH" | tr ":" "\n"
+type -a python3
+python3 --version
+python3 -m pip --version
+python3 -c "import sys; print(sys.executable)"
+~~~
+
+如果输出中包含多个 python3，选择路径正确的那个作为项目 Base interpreter；项目依赖仍然安装到 .venv。
+
+### 3.3 方式二：Homebrew
 
 如果平时已经使用 Homebrew 管理开发工具，可以使用：
 
@@ -203,9 +397,27 @@ __pycache__/
 
 依赖应该通过 requirements.txt 或 pyproject.toml 描述，而不是提交整个 .venv 文件夹。
 
-## 5. 在 PyCharm 中配置项目
+## 5. 安装并配置 PyCharm
 
-### 5.1 新建项目时创建虚拟环境
+### 5.1 安装 PyCharm 时的勾选
+
+从 JetBrains 官方页面下载 PyCharm。Python 解释器需要单独安装，PyCharm 自己不能替代 Python。
+
+Windows 使用 .exe 安装器时，安装向导可能出现这些附加选项：
+
+| 选项 | 建议 | 作用 |
+| --- | --- | --- |
+| Create Desktop Shortcut | 想从桌面启动就勾选 | 创建桌面快捷方式 |
+| Add launchers directory to the PATH | 可选 | 允许从终端启动 PyCharm，不影响 Python 的 PATH |
+| Update context menu | 建议勾选 | 右键文件夹时可以用 PyCharm 打开 |
+| Create associations for .py | 建议勾选 | 双击 .py 文件时默认用 PyCharm 打开 |
+| Download and install 32-bit launcher | 通常不需要 | 只有明确使用 32 位工具链时再考虑 |
+
+选项名称可能随 PyCharm 版本略有变化。不要把 Add launchers directory to the PATH 当成 Add Python to PATH；前者是 PyCharm 的启动命令，后者才是 Python 安装器的环境变量配置。
+
+macOS 使用 .dmg 安装时，一般是把 PyCharm 拖入 Applications，不会出现同样的 Windows 附加任务页面。首次启动时允许访问项目目录即可，Python 解释器在后面的项目设置中选择。
+
+### 5.2 新建项目时创建虚拟环境
 
 打开 PyCharm，新建项目时在 Python Interpreter 区域选择项目虚拟环境。推荐让 PyCharm 在项目目录中创建 .venv，并选择已经安装好的 Python 3.14 解释器作为 Base interpreter。
 
@@ -217,7 +429,7 @@ my-python-project/
 └── main.py
 ~~~
 
-### 5.2 为已有项目选择解释器
+### 5.3 为已有项目选择解释器
 
 Windows 的路径通常是：
 
@@ -245,7 +457,7 @@ PyCharm > Settings/Preferences > Project > Python Interpreter
 
 选择 Add Interpreter 或已有解释器，然后指向项目内的 .venv。配置后，在 PyCharm 的 Python Console、运行配置和 Terminal 中都检查一次当前解释器。
 
-### 5.3 用 PyCharm 运行和调试
+### 5.4 用 PyCharm 运行和调试
 
 新建 hello.py：
 
@@ -267,6 +479,8 @@ print(sys.executable)
 | pip install 后 PyCharm 仍然报红 | 在 PyCharm 中确认项目解释器与安装包所用的 .venv 是同一个 |
 | 包安装到了错误位置 | 激活 .venv 后使用 python -m pip show 包名和 python -c 检查 sys.executable |
 | PowerShell 无法运行激活脚本 | 使用 activate.bat，或仅对当前用户设置 RemoteSigned 后重开终端 |
+| 修改 PATH 后当前终端没变化 | 关闭并重新打开终端和 PyCharm；已经运行的程序不会自动读取新变量 |
+| 配置 PYTHONPATH 后 import 变乱 | 删除不必要的 PYTHONPATH，改用项目 .venv 和正确的包结构 |
 | PyCharm 没有可选解释器 | 先在终端确认 Python 可用，再通过 Add Interpreter 添加本地解释器 |
 | 多个 Python 版本互相混淆 | Windows 使用 py list，macOS 使用 which python3，然后为每个项目单独创建 .venv |
 
@@ -275,10 +489,13 @@ print(sys.executable)
 完成后可以逐项确认：
 
 - [ ] Windows 或 macOS 终端能够显示 Python 版本；
+- [ ] Windows 使用 where python，或 macOS 使用 type -a python3，确认实际解释器路径；
+- [ ] 新开终端后 PATH 仍然有效，没有覆盖原有 PATH；
 - [ ] 当前项目存在 .venv；
 - [ ] python -m pip list 显示的是项目环境中的包；
 - [ ] PyCharm 使用项目内的 .venv 解释器；
 - [ ] hello.py 能运行，也能在断点处暂停；
+- [ ] 没有为普通项目随意设置 PYTHONPATH；
 - [ ] .venv/ 已加入 .gitignore。
 
 ## 8. 官方资料与参考

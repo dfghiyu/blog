@@ -3,6 +3,13 @@
 ## 2026-09-12
 
 - 完成前序会话上下文读取和当前博客仓库定位。
+- 根据用户反馈，对照 Java 环境文章的详细安装风格复核 Python 环境文章。
+- 已补充传统 Windows 安装器的 Install Now、Customize installation、Add python.exe to PATH、pip、py launcher、Install for all users 等选项说明。
+- 已补充 Windows 用户变量/系统变量/当前终端变量/项目虚拟环境的区别、图形界面配置流程、临时与永久变量示例和验收命令。
+- 已补充 macOS ~/.zshrc 持久 PATH、自定义变量、Homebrew 架构路径确认、系统 Python 边界和配置验收。
+- 已补充 PyCharm Windows 安装器附加任务勾选说明，并更新常见问题与环境验收清单。
+- 已重新执行内容生成、内部链接检查和 VuePress 构建：生成 15 篇文章、4 个分类，成功渲染 29 个页面；内部链接全部解析，git diff --check 通过。
+- 待完成：提交并推送环境配置修订。
 - 检查了学习分类目录、Java/Linux/ACM 专题入口、文章 frontmatter、内容生成脚本和 VuePress 配置。
 - 用户确认“一篇专题入口 + 一篇路线总览”的实施设计。
 - 已写入 C++ 路线设计文档、任务计划和发现记录。
