@@ -48,3 +48,4 @@
 - 已更新 C++ 专题入口和路线文章的阅读顺序链接。
 - `pnpm docs:generate` 成功生成 15 篇文章、4 个分类、46 个标签；内部文章链接检查通过。
 - `pnpm docs:build` 成功渲染 29 个页面；C++ 专题入口、环境、Day 1、路线四个页面均生成；4 个 JSON 配置示例解析通过；`git diff --check` 通过。
+- 已创建提交 `8953656 docs: improve C++ VS Code and algorithm setup` 并推送到 `origin/main`；远程 `main` 已核对为 `89536562ecb0e04e4dd832c29175cc3ddadf62f0`。
