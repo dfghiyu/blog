@@ -11,6 +11,7 @@ description: C++ 开发环境、语言基础、工程化与项目实践的学习
 
 1. [VS Code 配置 C++ 开发环境](/posts/learning/cpp/cpp-environment-setup.html)：安装插件、编译器、调试器，并准备算法测试环境。
 2. [C++ 学习 Day 1](/posts/learning/cpp/cpp-day-1.html)：从第一个程序、输入输出、变量、判断和循环开始。
-3. [C++ 学习路线](/posts/learning/cpp/cpp-learning-roadmap.html)：按照基础语法、STL、现代 C++、工程化、算法和项目实践逐阶段推进。
+3. [C++ 学习 Day 2](/posts/learning/cpp/cpp-day-2.html)：学习函数、参数、返回值和作用域。
+4. [C++ 学习路线](/posts/learning/cpp/cpp-learning-roadmap.html)：按照基础语法、STL、现代 C++、工程化、算法和项目实践逐阶段推进。
 
 <PostList pathPrefix="/posts/learning/cpp/" />

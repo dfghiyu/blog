@@ -49,3 +49,11 @@
 - `pnpm docs:generate` 成功生成 15 篇文章、4 个分类、46 个标签；内部文章链接检查通过。
 - `pnpm docs:build` 成功渲染 29 个页面；C++ 专题入口、环境、Day 1、路线四个页面均生成；4 个 JSON 配置示例解析通过；`git diff --check` 通过。
 - 已创建提交 `8953656 docs: improve C++ VS Code and algorithm setup` 并推送到 `origin/main`；远程 `main` 已核对为 `89536562ecb0e04e4dd832c29175cc3ddadf62f0`。
+
+## C++ 学习 Day 2（2026-09-13）
+
+- 用户开始进行第二天 C++ 学习。
+- 根据既有路线，Day 2 主题确定为函数、参数、返回值和作用域，下一阶段再进入数组、字符串、指针和引用。
+- 编译验证第一次因外层命令转义把 C++ 的换行字符写成多字符字面量，输出异常；改用 `std::endl` 复核同等综合逻辑后，Clang 编译和运行通过。
+- Day 2 文章已加入专题入口和 Day 1 的下一步链接；`pnpm docs:generate` 生成 16 篇文章，内部文章链接检查通过，`pnpm docs:build` 成功渲染 30 个页面。
+- 修正行内代码标记后，Day 2 页面不再出现异常的 Iconify 解析；`git diff --check` 通过。
