@@ -477,4 +477,6 @@ else:
 
 下一步可以继续学习列表和字典的更多操作、切片、推导式、模块导入和标准库。等这些基础变得熟练后，再进入文件、异常、包管理和 Django。
 
+下一步：[Python 学习 Day 2：数据结构与函数基础](/posts/learning/python/python-day-2.html)。
+
 延伸阅读：[Python 官方教程](https://docs.python.org/3/tutorial/)、[Python 解释器介绍](https://docs.python.org/3/tutorial/interpreter.html)、[控制流工具](https://docs.python.org/3/tutorial/controlflow.html)。
