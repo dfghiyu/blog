@@ -118,7 +118,11 @@
 - [x] 检查现有 Day 1、路线、专题入口和仓库状态
 - [x] 编写 C++ Day 2 文章并更新专题导航
 - [x] 生成索引、检查内部链接和 VuePress 构建
-- [ ] 提交并推送到 GitHub，核对远程 main
+- [x] 提交并推送到 GitHub，核对远程 main
+
+## 结果
+
+- 已创建提交 `f442f40 docs: add C++ learning day 2` 并推送到 `origin/main`。
 
 ## 错误记录
 

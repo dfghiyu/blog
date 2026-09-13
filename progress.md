@@ -57,3 +57,4 @@
 - 编译验证第一次因外层命令转义把 C++ 的换行字符写成多字符字面量，输出异常；改用 `std::endl` 复核同等综合逻辑后，Clang 编译和运行通过。
 - Day 2 文章已加入专题入口和 Day 1 的下一步链接；`pnpm docs:generate` 生成 16 篇文章，内部文章链接检查通过，`pnpm docs:build` 成功渲染 30 个页面。
 - 修正行内代码标记后，Day 2 页面不再出现异常的 Iconify 解析；`git diff --check` 通过。
+- 已创建提交 `f442f40 docs: add C++ learning day 2` 并推送到 `origin/main`。
