@@ -79,7 +79,7 @@
 - [x] 编写实施计划
 - [x] 创建 Python Day 2 文章并补充 Day 1 下一步链接
 - [x] 生成索引、检查内部链接和 VuePress 构建
-- [ ] 提交并推送到 GitHub
+- [x] 提交并推送到 GitHub
 
 ## 决策
 

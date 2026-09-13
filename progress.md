@@ -10,7 +10,7 @@
 - 已在 python-day-1.md 添加 Day 2 下一步链接；未修改 README 或自动生成文件，专题入口继续由 PostList 和内容生成脚本维护。
 - pnpm docs:generate 收录 17 篇文章、4 个分类和 49 个标签；内部链接检查通过，Day 2 的 45 个 Python 代码块均通过语法编译。
 - pnpm docs:build 成功渲染 31 个页面，git diff --check 通过。
-- 待完成：提交并推送 Python Day 2 文章。
+- 已创建提交 2ba4d21 docs: add Python learning day 2，并成功推送到 origin/main。
 - 根据用户反馈，对照 Java 环境文章的详细安装风格复核 Python 环境文章。
 - 已补充传统 Windows 安装器的 Install Now、Customize installation、Add python.exe to PATH、pip、py launcher、Install for all users 等选项说明。
 - 已补充 Windows 用户变量/系统变量/当前终端变量/项目虚拟环境的区别、图形界面配置流程、临时与永久变量示例和验收命令。
