@@ -66,3 +66,9 @@
 - Day 2 文章已加入专题入口和 Day 1 的下一步链接；`pnpm docs:generate` 生成 16 篇文章，内部文章链接检查通过，`pnpm docs:build` 成功渲染 30 个页面。
 - 修正行内代码标记后，Day 2 页面不再出现异常的 Iconify 解析；`git diff --check` 通过。
 - 已创建提交 `f442f40 docs: add C++ learning day 2` 并推送到 `origin/main`。
+
+## C++ 学习 Day 3（2026-09-15）
+
+- 用户开始进行第三天 C++ 学习。
+- Day 3 设计确定为数组、字符串、指针与引用：先讲 C 风格基础，再以 `std::string`、`std::array` 和 `std::vector` 作为实际编程主线。
+- 已写入设计文档 `docs/superpowers/specs/2026-09-15-cpp-learning-day-3-design.md`，等待用户复核后开始编写正文。
